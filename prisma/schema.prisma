@@ -1,0 +1,324 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+ 
+}
+
+// ============================================
+// ADMISSION MANAGEMENT
+// ============================================
+
+model AdmissionApplication {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Student Information
+  studentFirstName  String
+  studentMiddleName String?
+  studentLastName   String
+  dateOfBirth       DateTime
+  gender            Gender
+  bloodGroup        String?
+  nationality       String   @default("Indian")
+  religion          String?
+  category          Category // General, OBC, SC, ST, EWS
+  aadharNumber      String?  @unique
+
+  // Class & Academic Details
+  classApplyingFor String // e.g., "Class I", "Class VI", etc.
+  previousSchool   String?
+  previousClass    String?
+  academicYear     String // e.g., "2025-26"
+
+  // Parent/Guardian Information
+  fatherName       String
+  fatherOccupation String?
+  fatherPhone      String
+  fatherEmail      String?
+
+  motherName       String
+  motherOccupation String?
+  motherPhone      String?
+  motherEmail      String?
+
+  guardianName     String?
+  guardianRelation String?
+  guardianPhone    String?
+  guardianEmail    String?
+
+  // Address Information
+  currentAddress String
+  currentCity    String
+  currentState   String
+  currentPincode String
+
+  permanentAddress String
+  permanentCity    String
+  permanentState   String
+  permanentPincode String
+
+  // Additional Information
+  medicalConditions String? // Any medical conditions or allergies
+  specialNeeds      String? // Any special educational needs
+
+  // Application Status
+  status            ApplicationStatus @default(PENDING)
+  applicationNumber String            @unique // Auto-generated application number
+  remarks           String? // Admin remarks
+
+  // Documents (URLs or file paths)
+  birthCertificate    String?
+  photoUrl            String?
+  transferCertificate String?
+  addressProof        String?
+
+  // Tracking
+  submittedBy String? // IP address or user identifier
+  reviewedBy  String? // Admin who reviewed
+  reviewedAt  DateTime?
+
+  @@index([applicationNumber])
+  @@index([status])
+  @@index([academicYear])
+  @@index([classApplyingFor])
+  @@index([createdAt])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Category {
+  GENERAL
+  OBC
+  SC
+  ST
+  EWS
+}
+
+enum ApplicationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  WAITLISTED
+  ADMITTED
+}
+
+// ============================================
+// NOTICE & ANNOUNCEMENTS MANAGEMENT
+// ============================================
+
+model Notice {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Notice Details
+  title       String
+  description String  @db.Text
+  content     String? @db.LongText // Full content if needed
+
+  // Categorization
+  category NoticeCategory
+  priority NoticePriority @default(NORMAL)
+
+  // Dates
+  publishDate DateTime  @default(now())
+  expiryDate  DateTime? // Optional expiry date
+  eventDate   DateTime? // If it's an event announcement
+
+  // Attachments
+  attachments NoticeAttachment[]
+
+  // Status & Visibility
+  isPublished Boolean @default(false)
+  isPinned    Boolean @default(false) // Pin to top
+  isActive    Boolean @default(true)
+
+  // Metadata
+  author String // Admin/Teacher who created
+  views  Int    @default(0)
+
+  // SEO & Tags
+  slug String   @unique
+
+  @@index([category])
+  @@index([priority])
+  @@index([publishDate])
+  @@index([isPublished])
+  @@index([isPinned])
+  @@index([slug])
+}
+
+model NoticeAttachment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  // File Information
+  fileName String
+  fileUrl  String
+  fileType String // e.g., "PDF", "Image", "Document"
+  fileSize Int // in bytes
+
+  // Relation
+  noticeId String
+  notice   Notice @relation(fields: [noticeId], references: [id], onDelete: Cascade)
+
+  @@index([noticeId])
+}
+
+enum NoticeCategory {
+  ADMISSION
+  EXAMINATION
+  HOLIDAY
+  EVENT
+  ACADEMIC
+  SPORTS
+  CULTURAL
+  GENERAL
+  IMPORTANT
+  RESULT
+  FEE
+  SCHOLARSHIP
+  VACANCY
+  TENDER
+}
+
+enum NoticePriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+// ============================================
+// CONTACT & INQUIRY MANAGEMENT
+// ============================================
+
+model ContactInquiry {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Contact Information
+  fullName String
+  email    String
+  phone    String?
+  subject  InquirySubject
+  message  String         @db.Text
+
+  // Status
+  status   InquiryStatus @default(NEW)
+  response String?       @db.Text
+
+  // Tracking
+  respondedBy String?
+  respondedAt DateTime?
+  ipAddress   String?
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([subject])
+}
+
+enum InquirySubject {
+  ADMISSION_INQUIRY
+  GENERAL_SUPPORT
+  FEEDBACK
+  COMPLAINT
+  OTHERS
+}
+
+enum InquiryStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+// ============================================
+// GALLERY MANAGEMENT
+// ============================================
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Image Details
+  title        String
+  description  String?
+  imageUrl     String
+  thumbnailUrl String?
+
+  // Categorization
+  category GalleryCategory
+
+  // Event Information
+  eventName String?
+  eventDate DateTime?
+
+  // Metadata
+  uploadedBy  String
+  isPublished Boolean @default(true)
+  order       Int     @default(0) // For sorting
+
+  @@index([category])
+  @@index([isPublished])
+  @@index([eventDate])
+}
+
+enum GalleryCategory {
+  ACADEMIC
+  SPORTS
+  CULTURAL
+  EVENTS
+  INFRASTRUCTURE
+  ACHIEVEMENTS
+  CELEBRATIONS
+  OTHERS
+}
+
+// ============================================
+// ADMIN USER MANAGEMENT
+// ============================================
+
+model Admin {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // User Information
+  email    String    @unique
+  password String // Hashed password
+  name     String
+  role     AdminRole @default(EDITOR)
+
+  // Status
+  isActive  Boolean   @default(true)
+  lastLogin DateTime?
+
+  @@index([email])
+  @@index([role])
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  VIEWER
+}
