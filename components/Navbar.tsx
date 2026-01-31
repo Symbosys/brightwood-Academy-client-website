@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Shield, Menu, X, GraduationCap, PhoneCall, Mail, Info } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -34,11 +35,11 @@ const Navbar = () => {
                 <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center text-[10px] font-bold uppercase tracking-wider">
                     <div className="flex gap-6">
                         <span className="flex items-center gap-2"><PhoneCall size={12} className="text-secondary" /> +91-7004818526</span>
-                        <span className="flex items-center gap-2"><Mail size={12} className="text-secondary" /> support@brightwoodacademy.in</span>
+                        <span className="flex items-center gap-2"><Mail size={12} className="text-secondary" />[EMAIL_ADDRESS]</span>
                     </div>
                     <div className="hidden md:flex gap-4 items-center">
                         <span className="bg-secondary px-2 py-0.5 rounded text-white">CBSE Affiliated</span>
-                        <span>Region: Delhi</span>
+                        <span>Region: Ranchi</span>
                     </div>
                 </div>
 
@@ -61,14 +62,16 @@ const Navbar = () => {
                 <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
 
                     {/* Logo Section - Formal KV Style */}
-                    <Link href="/" className="flex items-center gap-4 group">
-                        <div className={`w-14 h-14 bg-[#ffcc00] rounded-full border-2 border-primary flex items-center justify-center p-2 shadow-inner transition-transform group-hover:rotate-12`}>
-                            {/* Symbolizing KVS Logo motif */}
-                            <div className="relative w-full h-full">
-                                <Shield className="text-primary w-full h-full" strokeWidth={2.5} />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-4 h-4 rounded-full bg-secondary" />
-                                </div>
+                    <Link href="/" className="flex items-center gap-5 group">
+                        <div className={`${scrolled ? 'w-14 h-14' : 'w-20 h-20'} bg-white rounded-full border-2 border-primary/10 flex items-center justify-center p-0.5 shadow-xl transition-all duration-500 group-hover:scale-110 group-hover:border-secondary overflow-hidden`}>
+                            <div className="relative w-full h-full rounded-full overflow-hidden">
+                                <Image
+                                    src="/logo.jpg"
+                                    alt="Brightwood Logo"
+                                    fill
+                                    className="object-cover"
+                                    priority
+                                />
                             </div>
                         </div>
                         <div className="flex flex-col">

@@ -41,7 +41,8 @@ const Footer = () => {
                             {[
                                 { name: 'Brightwood Website', path: '#' },
                                 { name: 'Brightwood Directory', path: '#' },
-                                { name: 'Brightwood Admissions', path: '/admissions' }
+                                { name: 'Brightwood Admissions', path: '/admissions' },
+                                { name: 'Admin Panel', path: '/login' }
                             ].map((item) => (
                                 <li key={item.name}>
                                     <a href={item.path} className="text-white/60 text-[10px] hover:text-white transition-colors uppercase tracking-widest font-bold flex items-center gap-2">
@@ -94,7 +95,7 @@ const Footer = () => {
 
                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] font-black text-white/30 uppercase tracking-[0.4em]">
                     <div className="text-center md:text-left">
-                        <p>© 2025 Brightwood  Sangathan (All Rights Reserved)</p>
+                        <p>© 2025 Brightwood Academy(All Rights Reserved)</p>
                         <p className="mt-1">Maintained by School IT Department</p>
                     </div>
                     <div className="flex flex-wrap justify-center gap-6">
@@ -108,6 +109,8 @@ const Footer = () => {
 
             {/* Bottom Govt Bar */}
             <div className="w-full h-1 bg-secondary mt-12 opacity-50" />
+
+            <div className='text-center text-white/100 text-[15px] uppercase tracking-widest font-bold mt-12 '>Developed By <a target="_blank" href="https://symbosys.com/" className='text-blue-500 underline'>Symbosys</a></div>
         </footer>
     );
 };

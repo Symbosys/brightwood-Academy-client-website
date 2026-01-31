@@ -46,23 +46,34 @@ const Hero = () => {
                     {/* Right: Structured Grid (Typical of official sites) */}
                     <div className="lg:col-span-12 xl:col-span-5 grid grid-cols-1 gap-4">
                         <div className="bg-primary p-8 rounded-sm shadow-2xl relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
-                            <div className="relative z-10">
-                                <h3 className="text-secondary text-[18px] font-black uppercase tracking-widest mb-6 ml-32">chandan kumar</h3>
-                                <div className="space-y-5">
-                                    {[
-                                        // { label: "Online Fee Payment", color: "text-white" },
-                                        // { label: "Student Transfer Certificate", color: "text-white/80" },
-                                        // { label: "Academic Calendar", color: "text-white/80" },
-                                        // { label: "CBSE Result Analysis", color: "text-white/80" }
-                                    ].map((item, i) => (
-                                        <div key={i} className="flex justify-between items-center group/item cursor-pointer">
-                                            {/* <span className={`${item.color} text-[11px] font-bold uppercase tracking-[0.15em] group-hover/item:text-secondary group-hover/item:pl-2 transition-all`}>
-                                                {item.label}
-                                            </span> */}
-                                            <ArrowRight size={14} className="text-secondary opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-2 transition-all" />
-                                        </div>
-                                    ))}
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+                            <div className="relative z-10 flex flex-col h-full justify-between">
+                                <div className="space-y-4">
+                                    <div className="space-y-3">
+                                        <h3 className="text-secondary text-[20px] font-black uppercase tracking-tighter leading-none italic">
+                                            Excellence <br />
+                                            <span className="text-white">Through Values.</span>
+                                        </h3>
+                                        <div className="w-10 h-1 bg-secondary rounded-full" />
+                                    </div>
+                                    <p className="text-white/60 text-[10px] leading-relaxed font-bold uppercase tracking-[0.2em]">
+                                        Our mission is to empower learners with the skills and attitudes to face global challenges while upholding Indian culture.
+                                    </p>
+                                </div>
+
+                                <div className="mt-8 grid grid-cols-2 gap-3">
+                                    <div className="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all cursor-default group/stat">
+                                        <p className="text-secondary text-[9px] font-black uppercase tracking-widest mb-0.5 group-hover/stat:translate-x-1 transition-transform">Affiliation</p>
+                                        <p className="text-white text-lg font-black tracking-tight uppercase">CBSE-India</p>
+                                    </div>
+                                    <div className="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all cursor-default group/stat">
+                                        <p className="text-secondary text-[9px] font-black uppercase tracking-widest mb-0.5 group-hover/stat:translate-x-1 transition-transform">Status</p>
+                                        <p className="text-white text-lg font-black tracking-tight uppercase">Co-Ed</p>
+                                    </div>
+                                </div>
+
+                                <div className="mt-6 pt-6 border-t border-white/10 text-center">
+                                    <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.4em]">ISO 9001:2015 CERTIFIED</p>
                                 </div>
                             </div>
                         </div>
