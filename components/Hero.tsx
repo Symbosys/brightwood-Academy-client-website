@@ -48,18 +48,18 @@ const Hero = () => {
                         <div className="bg-primary p-8 rounded-sm shadow-2xl relative overflow-hidden group">
                             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
                             <div className="relative z-10">
-                                <h3 className="text-secondary text-xs font-black uppercase tracking-widest mb-6">Quick Shortcuts</h3>
+                                <h3 className="text-secondary text-[18px] font-black uppercase tracking-widest mb-6 ml-32">chandan kumar</h3>
                                 <div className="space-y-5">
                                     {[
-                                        { label: "Online Fee Payment", color: "text-white" },
-                                        { label: "Student Transfer Certificate", color: "text-white/80" },
-                                        { label: "Academic Calendar", color: "text-white/80" },
-                                        { label: "CBSE Result Analysis", color: "text-white/80" }
+                                        // { label: "Online Fee Payment", color: "text-white" },
+                                        // { label: "Student Transfer Certificate", color: "text-white/80" },
+                                        // { label: "Academic Calendar", color: "text-white/80" },
+                                        // { label: "CBSE Result Analysis", color: "text-white/80" }
                                     ].map((item, i) => (
                                         <div key={i} className="flex justify-between items-center group/item cursor-pointer">
-                                            <span className={`${item.color} text-[11px] font-bold uppercase tracking-[0.15em] group-hover/item:text-secondary group-hover/item:pl-2 transition-all`}>
+                                            {/* <span className={`${item.color} text-[11px] font-bold uppercase tracking-[0.15em] group-hover/item:text-secondary group-hover/item:pl-2 transition-all`}>
                                                 {item.label}
-                                            </span>
+                                            </span> */}
                                             <ArrowRight size={14} className="text-secondary opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-2 transition-all" />
                                         </div>
                                     ))}
@@ -68,11 +68,11 @@ const Hero = () => {
                         </div>
 
                         {/* Image of School Building/Flag */}
-                        <div className="aspect-video lg:aspect-[3/2] rounded-sm overflow-hidden shadow-2xl border-4 border-white">
+                        <div className="aspect-video lg:aspect-[2/2] rounded-sm overflow-hidden shadow-2xl border-4 border-white">
                             <img
-                                src="https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80"
-                                alt="KVS Campus"
-                                className="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-1000"
+                                src="/image/Gallery/uhzzgny19ldo0vqh6ram.jpg"
+                                alt="Brightwood School"
+                                className="w-full h-full object-cover brightness-90 hover: transition-all duration-1000"
                             />
                         </div>
                     </div>

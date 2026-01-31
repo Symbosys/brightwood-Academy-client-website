@@ -5,9 +5,14 @@ import Achievements from '../components/Achievements';
 import Testimonials from '../components/Testimonials';
 import Footer from '../components/Footer';
 import Link from 'next/link';
-import { ArrowRight, Bell, FileText, Download } from 'lucide-react';
+import { ArrowRight, Bell, FileText, Download, Quote } from 'lucide-react';
 
-export default function Homepage() {
+import { getAllNotices } from '@/actions/notice';
+
+export default async function Homepage() {
+  const noticesResponse = await getAllNotices({ limit: 10, isPublished: true });
+  const notices = noticesResponse.success ? noticesResponse.data : [];
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Navbar />
@@ -29,39 +34,66 @@ export default function Homepage() {
               </div>
 
               <div className="bg-slate-50 border-l-8 border-secondary p-8 shadow-inner space-y-6">
-                {[
-                  { date: "Oct 20, 2024", text: "Walk-in-interview for the post of PGT (Maths) and TGT (SST) contract basis.", link: "#" },
-                  { date: "Oct 15, 2024", text: "Registration for Admission in Class-XI (Science & Commerce) for session 2025.", link: "#" },
-                  { date: "Oct 10, 2024", text: "Revised Final Date Sheet for Half-Yearly Examination 2024-25.", link: "#" },
-                ].map((notice, i) => (
-                  <div key={i} className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4 last:border-0 last:pb-0 group">
-                    <div className="space-y-1">
-                      <p className="text-[10px] font-black text-secondary uppercase tracking-widest">{notice.date}</p>
-                      <p className="text-slate-800 font-bold group-hover:text-primary transition-colors">{notice.text}</p>
+                {notices && notices.length > 0 ? (
+                  notices.map((notice: any) => (
+                    <div key={notice.id} className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4 last:border-0 last:pb-0 group">
+                      <div className="space-y-1 flex-1">
+                        <p className="text-[10px] font-black text-secondary uppercase tracking-widest">
+                          {new Date(notice.publishDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </p>
+                        <Link href={`/notice/${notice.slug}`} className="text-slate-800 font-bold group-hover:text-primary transition-colors block leading-tight">
+                          {notice.title}
+                        </Link>
+                      </div>
+                      <Link
+                        href={`/notice/${notice.slug}`}
+                        className="flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-widest hover:text-secondary whitespace-nowrap"
+                      >
+                        <Download size={14} /> View Details
+                      </Link>
                     </div>
-                    <button className="flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-widest hover:text-secondary whitespace-nowrap">
-                      <Download size={14} /> Download PDF
-                    </button>
+                  ))
+                ) : (
+                  <div className="py-8 text-center bg-white/50 rounded-xl border border-dashed border-slate-200">
+                    <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">No active announcements at this time</p>
                   </div>
-                ))}
-                <Link href="/news" className="block text-center pt-4 text-xs font-black uppercase tracking-[0.3em] text-primary hover:text-secondary transition-all">
+                )}
+                <Link href="/notice" className="block text-center pt-4 text-xs font-black uppercase tracking-[0.3em] text-primary hover:text-secondary transition-all">
                   View All Announcements →
                 </Link>
               </div>
             </div>
 
-            {/* Quick Action Side Board */}
-            <div className="lg:col-span-4 space-y-6">
-              <div className="bg-primary p-10 text-white rounded-r-3xl shadow-2xl relative overflow-hidden">
-                <FileText size={80} className="absolute -bottom-4 -right-4 opacity-10" />
-                <h3 className="text-secondary text-xs font-black uppercase tracking-widest mb-6">Student corner</h3>
-                <div className="space-y-4">
-                  {['Vidyalaya Patrika 2024', 'NCERT Book Solutions', 'LMS Login', 'Alumni Registration'].map((item) => (
-                    <a key={item} href="#" className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded transition-all group">
-                      <span className="text-[11px] font-bold uppercase tracking-wider">{item}</span>
-                      <ArrowRight size={14} className="text-secondary opacity-0 group-hover:opacity-100 transition-all" />
-                    </a>
-                  ))}
+            {/* Insight/Quote Side Board */}
+            <div className="lg:col-span-4">
+              <div className="bg-primary p-12 text-white rounded-[3rem] shadow-2xl relative overflow-hidden group h-full flex flex-col justify-center min-h-[400px]">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-secondary/20 transition-all duration-700" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12 blur-2xl" />
+
+                <div className="relative z-10 text-center space-y-8">
+                  <div className="flex justify-center">
+                    <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/10 group-hover:scale-110 transition-transform duration-500">
+                      <Quote size={32} className="text-secondary fill-secondary/20" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <p className="text-2xl lg:text-3xl font-black font-outfit leading-tight tracking-tight italic">
+                      "Education is not the learning of facts, but the training of the mind to think."
+                    </p>
+
+                    <div className="flex items-center justify-center gap-4">
+                      <div className="w-8 h-[2px] bg-secondary/30"></div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary">
+                        Albert Einstein
+                      </p>
+                      <div className="w-8 h-[2px] bg-secondary/30"></div>
+                    </div>
+                  </div>
+
+                  <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] leading-relaxed max-w-[200px] mx-auto">
+                    Inspiring the next generation of thinkers at Brightwood
+                  </p>
                 </div>
               </div>
             </div>

@@ -12,7 +12,7 @@ const Testimonials = () => {
         {
             name: "Master Rahul Gupta",
             role: "School Captain | Batch 2024",
-            text: "KV has given me the confidence to compete at a national level. The focus on science exhibitions and sports alongside academics is what makes us true KVians.",
+            text: "brightwood Academy has given me the confidence to compete at a national level. The focus on science exhibitions and sports alongside academics is what makes us true brightwoodias.",
             image: "https://images.unsplash.com/photo-1544465544-1b71aee9dfa3?auto=format&fit=crop&q=80"
         },
         {
@@ -64,7 +64,7 @@ const Testimonials = () => {
 
                 {/* Statutory Badges */}
                 <div className="mt-24 flex flex-wrap justify-center items-center gap-12 opacity-30 grayscale contrast-125">
-                    {['Ministry of Education', 'CBSE Affiliated', 'National Integration', 'KVS Sangathan'].map(item => (
+                    {['Ministry of Education', 'CBSE Affiliated', 'National Integration', 'Brightwood Sangathan'].map(item => (
                         <span key={item} className="text-[12px] font-black uppercase tracking-[0.4em] text-primary">{item}</span>
                     ))}
                 </div>

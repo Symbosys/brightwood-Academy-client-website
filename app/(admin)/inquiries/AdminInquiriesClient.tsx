@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Search, Filter, Eye, Trash2, CheckCircle, MessageCircle, Loader2 } from 'lucide-react';
+import { Search, Filter, Eye, Trash2, CheckCircle, MessageCircle, Loader2, X, AlertCircle } from 'lucide-react';
 import {
     getAllContactInquiries,
     updateContactInquiryStatus,
@@ -53,6 +53,10 @@ export default function AdminInquiriesClient({
     const [pagination, setPagination] = useState(initialPagination);
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [isResolveModalOpen, setIsResolveModalOpen] = useState(false);
+    const [responseMessage, setResponseMessage] = useState('');
 
     const stats = initialStats ? {
         totalInquiries: initialStats.totalInquiries || 0,
@@ -101,19 +105,28 @@ export default function AdminInquiriesClient({
 
     // Handle mark as resolved
     const handleResolve = async (id: string) => {
-        const response = prompt('Enter response message (optional):');
-        if (response === null) return; // User cancelled
+        const inquiry = inquiries.find(i => i.id === id);
+        if (!inquiry) return;
+
+        setSelectedInquiry(inquiry);
+        setResponseMessage('');
+        setIsResolveModalOpen(true);
+    };
+
+    const confirmResolve = async () => {
+        if (!selectedInquiry) return;
 
         startTransition(async () => {
             const result = await updateContactInquiryStatus({
-                id,
+                id: selectedInquiry.id,
                 status: 'RESOLVED',
                 respondedBy: 'Admin User', // Replace with actual admin name
-                response: response || 'Inquiry resolved',
+                response: responseMessage || 'Inquiry resolved',
             });
 
             if (result.success) {
                 alert('Inquiry marked as resolved!');
+                setIsResolveModalOpen(false);
                 fetchInquiries(currentPage);
                 router.refresh();
             } else {
@@ -139,6 +152,12 @@ export default function AdminInquiriesClient({
                 alert(result.error || 'Failed to update inquiry');
             }
         });
+    };
+
+    // Handle view details
+    const handleViewDetails = (inquiry: Inquiry) => {
+        setSelectedInquiry(inquiry);
+        setIsDetailModalOpen(true);
     };
 
     // Handle delete inquiry
@@ -322,6 +341,7 @@ export default function AdminInquiriesClient({
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <button
+                                            onClick={() => handleViewDetails(inquiry)}
                                             className="p-2 hover:bg-blue-50 text-blue-600 rounded-lg transition-colors"
                                             title="View Details"
                                         >
@@ -400,6 +420,131 @@ export default function AdminInquiriesClient({
                         >
                             Next
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Detail Modal */}
+            {isDetailModalOpen && selectedInquiry && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in duration-300">
+                        <div className="p-8 border-b border-slate-100 flex justify-between items-center">
+                            <div>
+                                <h2 className="text-2xl font-black font-outfit text-primary capitalize">Inquiry Details</h2>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">ID: {selectedInquiry.id}</p>
+                            </div>
+                            <button
+                                onClick={() => setIsDetailModalOpen(false)}
+                                className="w-10 h-10 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <div className="p-8 max-h-[70vh] overflow-y-auto space-y-8">
+                            <div className="grid grid-cols-2 gap-8">
+                                <div>
+                                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Sender Name</h4>
+                                    <p className="font-bold text-slate-800">{selectedInquiry.fullName}</p>
+                                </div>
+                                <div>
+                                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Subject</h4>
+                                    <span className={`px-3 py-1 rounded-full text-[10px] font-black ${getSubjectBadge(selectedInquiry.subject)}`}>
+                                        {selectedInquiry.subject.replace('_', ' ')}
+                                    </span>
+                                </div>
+                                <div>
+                                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Email Address</h4>
+                                    <p className="font-bold text-slate-800">{selectedInquiry.email}</p>
+                                </div>
+                                <div>
+                                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Phone Number</h4>
+                                    <p className="font-bold text-slate-800">{selectedInquiry.phone || 'N/A'}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Inquiry Message</h4>
+                                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-sm text-slate-700 leading-relaxed font-medium">
+                                    {selectedInquiry.message}
+                                </div>
+                            </div>
+                            {selectedInquiry.response && (
+                                <div>
+                                    <h4 className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-2">Response History</h4>
+                                    <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 text-sm text-emerald-900 leading-relaxed font-medium">
+                                        {selectedInquiry.response}
+                                        <div className="mt-4 pt-4 border-t border-emerald-100/50 flex justify-between items-center text-[10px] text-emerald-600 font-bold uppercase tracking-wider">
+                                            <span>Responded by: {selectedInquiry.respondedBy || 'Admin'}</span>
+                                            <span>{selectedInquiry.respondedAt ? formatDate(selectedInquiry.respondedAt) : 'N/A'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        <div className="p-8 bg-slate-50 border-t border-slate-100 flex justify-end gap-4">
+                            <button
+                                onClick={() => setIsDetailModalOpen(false)}
+                                className="px-8 py-3 text-slate-500 font-black text-xs uppercase tracking-widest hover:text-primary transition-colors"
+                            >
+                                Close
+                            </button>
+                            {selectedInquiry.status !== 'RESOLVED' && (
+                                <button
+                                    onClick={() => {
+                                        setIsDetailModalOpen(false);
+                                        handleResolve(selectedInquiry.id);
+                                    }}
+                                    className="px-8 py-3 bg-primary text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-secondary transition-all shadow-lg shadow-primary/20"
+                                >
+                                    Reply & Resolve
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Resolve/Reply Modal */}
+            {isResolveModalOpen && selectedInquiry && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in duration-300">
+                        <div className="p-8 border-b border-slate-100">
+                            <h2 className="text-2xl font-black font-outfit text-primary capitalize">Resolve Inquiry</h2>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">To: {selectedInquiry.email}</p>
+                        </div>
+                        <div className="p-8 space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Your Response Message</label>
+                                <textarea
+                                    rows={5}
+                                    value={responseMessage}
+                                    onChange={(e) => setResponseMessage(e.target.value)}
+                                    placeholder="Enter your response to the sender..."
+                                    className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:border-emerald-500 outline-none transition-all font-medium text-slate-800 text-sm resize-none"
+                                ></textarea>
+                            </div>
+                            <div className="flex items-center gap-2 p-4 bg-amber-50 rounded-xl border border-amber-100">
+                                <AlertCircle size={16} className="text-amber-500 shrink-0" />
+                                <p className="text-[10px] font-bold text-amber-700 leading-tight">
+                                    Marking as resolved will officially close this inquiry in the system.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="p-8 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+                            <button
+                                onClick={() => setIsResolveModalOpen(false)}
+                                className="px-6 py-3 text-slate-500 font-bold text-[10px] uppercase tracking-widest hover:text-slate-800 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmResolve}
+                                disabled={isPending}
+                                className="px-8 py-3 bg-emerald-500 text-white font-black text-[10px] uppercase tracking-widest rounded-xl hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2"
+                            >
+                                {isPending ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle size={14} />}
+                                Confirm Resolve
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

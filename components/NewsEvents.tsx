@@ -1,5 +1,5 @@
-
 import { Clock, MapPin, ArrowRight, Calendar } from 'lucide-react';
+import Link from 'next/link';
 
 const NewsEvents = () => {
     const news = [
@@ -55,9 +55,9 @@ const NewsEvents = () => {
                         </h2>
                     </div>
                     <div className="flex gap-4">
-                        <button className="px-8 py-3 bg-white border border-slate-200 text-primary font-bold text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all rounded-md">
+                        <Link href="/notice" className="px-8 py-3 bg-white border border-slate-200 text-primary font-bold text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all rounded-md">
                             View All Updates
-                        </button>
+                        </Link>
                     </div>
                 </div>
 

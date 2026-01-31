@@ -24,8 +24,7 @@ export const contactInquirySchema = z.object({
     fullName: z
         .string()
         .min(2, "Name must be at least 2 characters")
-        .max(100, "Name must not exceed 100 characters")
-        .regex(/^[a-zA-Z\s]+$/, "Name should only contain letters and spaces"),
+        .max(150, "Name must not exceed 150 characters"),
 
     email: z
         .string()
@@ -35,8 +34,9 @@ export const contactInquirySchema = z.object({
     phone: z
         .string()
         .regex(phoneRegex, "Invalid phone number. Must be 10 digits starting with 6-9")
+        .nullable()
         .optional()
-        .nullable(),
+        .or(z.literal("")),
 
     subject: InquirySubjectEnum,
 

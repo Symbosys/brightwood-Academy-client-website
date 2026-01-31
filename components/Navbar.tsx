@@ -17,10 +17,11 @@ const Navbar = () => {
     }, []);
 
     const navLinks = [
-        { name: 'About Brightwood', path: '/about' },
+        { name: 'About', path: '/about' },
         { name: 'Academics', path: '/academics' },
         { name: 'Admissions', path: '/admissions' },
-        { name: 'Announcements', path: '/news' },
+        { name: 'Announcements', path: '/notice' },
+        { name: 'Enquiry', path: '/enquiry' },
         { name: 'Gallery', path: '/gallery' },
         { name: 'Contact', path: '/contact' },
     ];
@@ -95,9 +96,9 @@ const Navbar = () => {
 
                         <div className="w-px h-6 bg-slate-200 mx-4" />
 
-                        <button className="px-6 py-2.5 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-md hover:bg-secondary transition-colors shadow-lg shadow-primary/20 flex items-center gap-2">
+                        {/* <button className="px-6 py-2.5 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-md hover:bg-secondary transition-colors shadow-lg shadow-primary/20 flex items-center gap-2">
                             <GraduationCap size={14} /> ERP Portal
-                        </button>
+                        </button> */}
                     </div>
 
                     {/* Mobile Menu Button */}

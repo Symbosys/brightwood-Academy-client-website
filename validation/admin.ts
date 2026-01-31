@@ -31,10 +31,9 @@ export const adminRegistrationSchema = z.object({
     name: z
         .string()
         .min(2, "Name must be at least 2 characters")
-        .max(100, "Name must not exceed 100 characters")
-        .regex(/^[a-zA-Z\s]+$/, "Name should only contain letters and spaces"),
+        .max(100, "Name must not exceed 100 characters"),
 
-    role: AdminRoleEnum.default("VIEWER"),
+    role: AdminRoleEnum,
 });
 
 // Admin Login Schema
@@ -58,14 +57,15 @@ export const updateAdminSchema = z.object({
         .email("Invalid email address")
         .max(100, "Email must not exceed 100 characters")
         .toLowerCase()
-        .optional(),
+        .optional()
+        .or(z.literal("")),
 
     name: z
         .string()
         .min(2, "Name must be at least 2 characters")
         .max(100, "Name must not exceed 100 characters")
-        .regex(/^[a-zA-Z\s]+$/, "Name should only contain letters and spaces")
-        .optional(),
+        .optional()
+        .or(z.literal("")),
 
     role: AdminRoleEnum.optional(),
 
@@ -82,12 +82,8 @@ export const changePasswordSchema = z.object({
 
     newPassword: z
         .string()
-        .min(8, "Password must be at least 8 characters")
-        .max(100, "Password must not exceed 100 characters")
-        .regex(
-            passwordRegex,
-            "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-        ),
+        .min(6, "Password must be at least 6 characters")
+        .max(100, "Password must not exceed 100 characters"),
 
     confirmPassword: z
         .string()
@@ -103,12 +99,8 @@ export const resetPasswordSchema = z.object({
 
     newPassword: z
         .string()
-        .min(8, "Password must be at least 8 characters")
-        .max(100, "Password must not exceed 100 characters")
-        .regex(
-            passwordRegex,
-            "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-        ),
+        .min(6, "Password must be at least 6 characters")
+        .max(100, "Password must not exceed 100 characters"),
 });
 
 // Get Admins Query Schema

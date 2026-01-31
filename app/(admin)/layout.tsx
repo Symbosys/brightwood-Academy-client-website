@@ -14,31 +14,33 @@ import {
     LogOut,
     GraduationCap,
 } from 'lucide-react';
+import { logoutAdmin } from '@/actions/admin';
+import { useRouter } from 'next/navigation';
 
 const navigation = [
-    {
-        name: 'Dashboard',
-        href: '/admin',
-        icon: LayoutDashboard,
-    },
+    // {
+    //     name: 'Dashboard',
+    //     href: '/admin',
+    //     icon: LayoutDashboard,
+    // },
     {
         name: 'Admissions',
-        href: '/admin/admissions',
+        href: '/admin-admission',
         icon: FileText,
     },
     {
         name: 'Notices',
-        href: '/admin/notices',
+        href: '/notices',
         icon: Bell,
     },
     {
         name: 'Inquiries',
-        href: '/admin/inquiries',
+        href: '/inquiries',
         icon: MessageSquare,
     },
     {
         name: 'Admin Users',
-        href: '/admin/users',
+        href: '/admin',
         icon: Users,
     },
 ];
@@ -50,6 +52,14 @@ export default function AdminLayout({
 }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        const result = await logoutAdmin();
+        if (result.success) {
+            router.push('/login');
+        }
+    };
 
     return (
         <div className="min-h-screen bg-slate-50">
@@ -99,8 +109,8 @@ export default function AdminLayout({
                                     key={item.name}
                                     href={item.href}
                                     className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all ${isActive
-                                            ? 'bg-secondary text-white shadow-lg'
-                                            : 'text-white/70 hover:bg-white/10 hover:text-white'
+                                        ? 'bg-secondary text-white shadow-lg'
+                                        : 'text-white/70 hover:bg-white/10 hover:text-white'
                                         }`}
                                     onClick={() => setSidebarOpen(false)}
                                 >
@@ -117,7 +127,10 @@ export default function AdminLayout({
                             <p className="text-white font-bold text-sm">Admin User</p>
                             <p className="text-white/60 text-xs">admin@brightwood.com</p>
                         </div>
-                        <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold text-sm transition-all">
+                        <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold text-sm transition-all"
+                        >
                             <LogOut size={18} />
                             Logout
                         </button>

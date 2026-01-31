@@ -21,6 +21,7 @@ import {
 } from "@/validation/admin";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
+import { login, logout } from "@/lib/auth";
 
 // ============================================
 // REGISTER ADMIN
@@ -149,6 +150,9 @@ export async function loginAdmin(data: AdminLoginInput) {
         // Return admin data (without password)
         const { password, ...adminData } = admin;
 
+        // Set session cookie
+        await login(adminData);
+
         return {
             success: true,
             data: adminData,
@@ -171,6 +175,13 @@ export async function loginAdmin(data: AdminLoginInput) {
         };
     }
 }
+
+export async function logoutAdmin() {
+    await logout();
+    revalidatePath("/");
+    return { success: true };
+}
+
 
 // ============================================
 // UPDATE ADMIN
