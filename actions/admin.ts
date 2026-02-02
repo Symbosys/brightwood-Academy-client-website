@@ -21,7 +21,34 @@ import {
 } from "@/validation/admin";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
-import { login, logout } from "@/lib/auth";
+import { login, logout, getSession } from "@/lib/auth";
+
+// ============================================
+// GET CURRENT ADMIN
+// ============================================
+
+export async function getCurrentAdmin() {
+    try {
+        const session = await getSession();
+        if (!session || !session.user) {
+            return {
+                success: false,
+                error: "Unauthorized",
+            };
+        }
+
+        return {
+            success: true,
+            data: session.user,
+        };
+    } catch (error: any) {
+        console.error("Error fetching current admin:", error);
+        return {
+            success: false,
+            error: "Failed to fetch session",
+        };
+    }
+}
 
 // ============================================
 // REGISTER ADMIN

@@ -961,6 +961,7 @@ export const GalleryImageScalarFieldEnum = {
   title: 'title',
   description: 'description',
   imageUrl: 'imageUrl',
+  publicId: 'publicId',
   thumbnailUrl: 'thumbnailUrl',
   category: 'category',
   eventName: 'eventName',
@@ -1094,6 +1095,7 @@ export const GalleryImageOrderByRelevanceFieldEnum = {
   title: 'title',
   description: 'description',
   imageUrl: 'imageUrl',
+  publicId: 'publicId',
   thumbnailUrl: 'thumbnailUrl',
   eventName: 'eventName',
   uploadedBy: 'uploadedBy'

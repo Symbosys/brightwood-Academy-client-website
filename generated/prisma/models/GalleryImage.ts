@@ -41,6 +41,7 @@ export type GalleryImageMinAggregateOutputType = {
   title: string | null
   description: string | null
   imageUrl: string | null
+  publicId: string | null
   thumbnailUrl: string | null
   category: $Enums.GalleryCategory | null
   eventName: string | null
@@ -57,6 +58,7 @@ export type GalleryImageMaxAggregateOutputType = {
   title: string | null
   description: string | null
   imageUrl: string | null
+  publicId: string | null
   thumbnailUrl: string | null
   category: $Enums.GalleryCategory | null
   eventName: string | null
@@ -73,6 +75,7 @@ export type GalleryImageCountAggregateOutputType = {
   title: number
   description: number
   imageUrl: number
+  publicId: number
   thumbnailUrl: number
   category: number
   eventName: number
@@ -99,6 +102,7 @@ export type GalleryImageMinAggregateInputType = {
   title?: true
   description?: true
   imageUrl?: true
+  publicId?: true
   thumbnailUrl?: true
   category?: true
   eventName?: true
@@ -115,6 +119,7 @@ export type GalleryImageMaxAggregateInputType = {
   title?: true
   description?: true
   imageUrl?: true
+  publicId?: true
   thumbnailUrl?: true
   category?: true
   eventName?: true
@@ -131,6 +136,7 @@ export type GalleryImageCountAggregateInputType = {
   title?: true
   description?: true
   imageUrl?: true
+  publicId?: true
   thumbnailUrl?: true
   category?: true
   eventName?: true
@@ -234,6 +240,7 @@ export type GalleryImageGroupByOutputType = {
   title: string
   description: string | null
   imageUrl: string
+  publicId: string
   thumbnailUrl: string | null
   category: $Enums.GalleryCategory
   eventName: string | null
@@ -273,6 +280,7 @@ export type GalleryImageWhereInput = {
   title?: Prisma.StringFilter<"GalleryImage"> | string
   description?: Prisma.StringNullableFilter<"GalleryImage"> | string | null
   imageUrl?: Prisma.StringFilter<"GalleryImage"> | string
+  publicId?: Prisma.StringFilter<"GalleryImage"> | string
   thumbnailUrl?: Prisma.StringNullableFilter<"GalleryImage"> | string | null
   category?: Prisma.EnumGalleryCategoryFilter<"GalleryImage"> | $Enums.GalleryCategory
   eventName?: Prisma.StringNullableFilter<"GalleryImage"> | string | null
@@ -289,6 +297,7 @@ export type GalleryImageOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.SortOrder
   eventName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -309,6 +318,7 @@ export type GalleryImageWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"GalleryImage"> | string
   description?: Prisma.StringNullableFilter<"GalleryImage"> | string | null
   imageUrl?: Prisma.StringFilter<"GalleryImage"> | string
+  publicId?: Prisma.StringFilter<"GalleryImage"> | string
   thumbnailUrl?: Prisma.StringNullableFilter<"GalleryImage"> | string | null
   category?: Prisma.EnumGalleryCategoryFilter<"GalleryImage"> | $Enums.GalleryCategory
   eventName?: Prisma.StringNullableFilter<"GalleryImage"> | string | null
@@ -325,6 +335,7 @@ export type GalleryImageOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.SortOrder
   eventName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -349,6 +360,7 @@ export type GalleryImageScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"GalleryImage"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"GalleryImage"> | string | null
   imageUrl?: Prisma.StringWithAggregatesFilter<"GalleryImage"> | string
+  publicId?: Prisma.StringWithAggregatesFilter<"GalleryImage"> | string
   thumbnailUrl?: Prisma.StringNullableWithAggregatesFilter<"GalleryImage"> | string | null
   category?: Prisma.EnumGalleryCategoryWithAggregatesFilter<"GalleryImage"> | $Enums.GalleryCategory
   eventName?: Prisma.StringNullableWithAggregatesFilter<"GalleryImage"> | string | null
@@ -365,6 +377,7 @@ export type GalleryImageCreateInput = {
   title: string
   description?: string | null
   imageUrl: string
+  publicId: string
   thumbnailUrl?: string | null
   category: $Enums.GalleryCategory
   eventName?: string | null
@@ -381,6 +394,7 @@ export type GalleryImageUncheckedCreateInput = {
   title: string
   description?: string | null
   imageUrl: string
+  publicId: string
   thumbnailUrl?: string | null
   category: $Enums.GalleryCategory
   eventName?: string | null
@@ -397,6 +411,7 @@ export type GalleryImageUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumGalleryCategoryFieldUpdateOperationsInput | $Enums.GalleryCategory
   eventName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -413,6 +428,7 @@ export type GalleryImageUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumGalleryCategoryFieldUpdateOperationsInput | $Enums.GalleryCategory
   eventName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -429,6 +445,7 @@ export type GalleryImageCreateManyInput = {
   title: string
   description?: string | null
   imageUrl: string
+  publicId: string
   thumbnailUrl?: string | null
   category: $Enums.GalleryCategory
   eventName?: string | null
@@ -445,6 +462,7 @@ export type GalleryImageUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumGalleryCategoryFieldUpdateOperationsInput | $Enums.GalleryCategory
   eventName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -461,6 +479,7 @@ export type GalleryImageUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumGalleryCategoryFieldUpdateOperationsInput | $Enums.GalleryCategory
   eventName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -483,6 +502,7 @@ export type GalleryImageCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrder
   category?: Prisma.SortOrder
   eventName?: Prisma.SortOrder
@@ -503,6 +523,7 @@ export type GalleryImageMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrder
   category?: Prisma.SortOrder
   eventName?: Prisma.SortOrder
@@ -519,6 +540,7 @@ export type GalleryImageMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrder
   category?: Prisma.SortOrder
   eventName?: Prisma.SortOrder
@@ -545,6 +567,7 @@ export type GalleryImageSelect<ExtArgs extends runtime.Types.Extensions.Internal
   title?: boolean
   description?: boolean
   imageUrl?: boolean
+  publicId?: boolean
   thumbnailUrl?: boolean
   category?: boolean
   eventName?: boolean
@@ -563,6 +586,7 @@ export type GalleryImageSelectScalar = {
   title?: boolean
   description?: boolean
   imageUrl?: boolean
+  publicId?: boolean
   thumbnailUrl?: boolean
   category?: boolean
   eventName?: boolean
@@ -572,7 +596,7 @@ export type GalleryImageSelectScalar = {
   order?: boolean
 }
 
-export type GalleryImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "title" | "description" | "imageUrl" | "thumbnailUrl" | "category" | "eventName" | "eventDate" | "uploadedBy" | "isPublished" | "order", ExtArgs["result"]["galleryImage"]>
+export type GalleryImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "title" | "description" | "imageUrl" | "publicId" | "thumbnailUrl" | "category" | "eventName" | "eventDate" | "uploadedBy" | "isPublished" | "order", ExtArgs["result"]["galleryImage"]>
 
 export type $GalleryImagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "GalleryImage"
@@ -584,6 +608,7 @@ export type $GalleryImagePayload<ExtArgs extends runtime.Types.Extensions.Intern
     title: string
     description: string | null
     imageUrl: string
+    publicId: string
     thumbnailUrl: string | null
     category: $Enums.GalleryCategory
     eventName: string | null
@@ -966,6 +991,7 @@ export interface GalleryImageFieldRefs {
   readonly title: Prisma.FieldRef<"GalleryImage", 'String'>
   readonly description: Prisma.FieldRef<"GalleryImage", 'String'>
   readonly imageUrl: Prisma.FieldRef<"GalleryImage", 'String'>
+  readonly publicId: Prisma.FieldRef<"GalleryImage", 'String'>
   readonly thumbnailUrl: Prisma.FieldRef<"GalleryImage", 'String'>
   readonly category: Prisma.FieldRef<"GalleryImage", 'GalleryCategory'>
   readonly eventName: Prisma.FieldRef<"GalleryImage", 'String'>

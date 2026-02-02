@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
     LayoutDashboard,
@@ -13,9 +14,11 @@ import {
     X,
     LogOut,
     GraduationCap,
+    Image as ImageIcon,
 } from 'lucide-react';
-import { logoutAdmin } from '@/actions/admin';
+import { logoutAdmin, getCurrentAdmin } from '@/actions/admin';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const navigation = [
     // {
@@ -39,6 +42,11 @@ const navigation = [
         icon: MessageSquare,
     },
     {
+        name: 'Gallery',
+        href: '/admin/gallery',
+        icon: ImageIcon,
+    },
+    {
         name: 'Admin Users',
         href: '/admin',
         icon: Users,
@@ -51,8 +59,21 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [user, setUser] = useState<any>(null);
     const pathname = usePathname();
     const router = useRouter();
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const result = await getCurrentAdmin();
+            if (result.success) {
+                setUser(result.data);
+            } else {
+                router.push('/login');
+            }
+        };
+        fetchUser();
+    }, [router]);
 
     const handleLogout = async () => {
         const result = await logoutAdmin();
@@ -79,17 +100,26 @@ export default function AdminLayout({
                 <div className="flex flex-col h-full">
                     {/* Logo */}
                     <div className="flex items-center justify-between p-6 border-b border-white/10">
-                        <Link href="/admin" className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center">
-                                <GraduationCap className="text-white" size={24} />
+                        <Link href="/admin" className="flex items-center gap-3 group transition-all duration-300 active:scale-95">
+                            <div className="relative w-12 h-12 bg-white rounded-full flex items-center justify-center p-0.5 shadow-2xl transition-all duration-300 group-hover:shadow-secondary/20 ring-4 ring-white/5 group-hover:ring-secondary/20 overflow-hidden shrink-0">
+                                <Image
+                                    src="/logo.jpg"
+                                    alt="Brightwood Logo"
+                                    fill
+                                    priority
+                                    className="object-cover transition-transform duration-700 group-hover:scale-115"
+                                />
                             </div>
-                            <div>
-                                <h1 className="text-white font-black font-outfit text-lg tracking-tight">
-                                    Brightwood
+                            <div className="flex flex-col">
+                                <h1 className="text-white font-black font-outfit text-base leading-none tracking-tighter uppercase group-hover:text-secondary transition-colors">
+                                    Brightwood <span className="text-secondary group-hover:text-white transition-colors">Academy</span>
                                 </h1>
-                                <p className="text-white/60 text-[10px] font-bold uppercase tracking-wider">
-                                    Admin Panel
-                                </p>
+                                <div className="flex items-center gap-1.5 mt-1">
+                                    <span className="w-1 h-1 bg-secondary rounded-full animate-pulse shadow-[0_0_5px_#ff9933]"></span>
+                                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/50 leading-none">
+                                        Admin Panel
+                                    </p>
+                                </div>
                             </div>
                         </Link>
                         <button
@@ -124,8 +154,8 @@ export default function AdminLayout({
                     {/* User section */}
                     <div className="p-4 border-t border-white/10">
                         <div className="bg-white/5 rounded-xl p-4 mb-3">
-                            <p className="text-white font-bold text-sm">Admin User</p>
-                            <p className="text-white/60 text-xs">admin@brightwood.com</p>
+                            <p className="text-white font-bold text-sm truncate">{user?.name || 'Loading...'}</p>
+                            <p className="text-white/60 text-xs truncate">{user?.email || 'admin@brightwood.com'}</p>
                         </div>
                         <button
                             onClick={handleLogout}
@@ -158,11 +188,11 @@ export default function AdminLayout({
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="hidden sm:block text-right">
-                                <p className="text-sm font-bold text-slate-800">Admin User</p>
-                                <p className="text-xs text-slate-500">Super Admin</p>
+                                <p className="text-sm font-bold text-slate-800">{user?.name || 'Admin'}</p>
+                                <p className="text-xs text-slate-500 capitalize">{user?.role?.replace('_', ' ').toLowerCase() || 'Super Admin'}</p>
                             </div>
-                            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">
-                                A
+                            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold shadow-lg uppercase">
+                                {user?.name?.[0] || 'A'}
                             </div>
                         </div>
                     </div>

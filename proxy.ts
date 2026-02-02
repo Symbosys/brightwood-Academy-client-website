@@ -16,29 +16,29 @@ async function decrypt(token: string) {
 }
 
 export default async function proxy(req: NextRequest) {
-    const path = req.nextUrl.pathname;
+    // const path = req.nextUrl.pathname;
 
-    // Define route types
-    const isProtectedRoute = ["/admin", "/admin-admission", "/notices", "/inquiries"].some((route) =>
-        path === route || path.startsWith(`${route}/`)
-    );
-    const isAuthRoute = path === "/login";
+    // // Define route types
+    // const isProtectedRoute = ["/admin", "/admin-admission", "/notices", "/inquiries"].some((route) =>
+    //     path === route || path.startsWith(`${route}/`)
+    // );
+    // const isAuthRoute = path === "/login";
 
-    // Get session
-    const token = req.cookies.get("session")?.value;
-    const session = token ? await decrypt(token) : null;
+    // // Get session
+    // const token = req.cookies.get("session")?.value;
+    // const session = token ? await decrypt(token) : null;
 
-    // 1. Redirect to /login if unauthenticated and accessing protected route
-    if (isProtectedRoute && !session) {
-        return NextResponse.redirect(new URL("/login", req.url));
-    }
+    // // 1. Redirect to /login if unauthenticated and accessing protected route
+    // if (isProtectedRoute && !session) {
+    //     return NextResponse.redirect(new URL("/login", req.url));
+    // }
 
-    // 2. Redirect to /admin if authenticated and accessing auth route
-    if (isAuthRoute && session) {
-        return NextResponse.redirect(new URL("/admin", req.url));
-    }
+    // // 2. Redirect to /admin if authenticated and accessing auth route
+    // if (isAuthRoute && session) {
+    //     return NextResponse.redirect(new URL("/admin", req.url));
+    // }
 
-    return NextResponse.next();
+    // return NextResponse.next();
 }
 
 export const config = {

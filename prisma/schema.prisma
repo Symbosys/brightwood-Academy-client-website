@@ -11,7 +11,6 @@ generator client {
 
 datasource db {
   provider = "mysql"
- 
 }
 
 // ============================================
@@ -154,7 +153,7 @@ model Notice {
   views  Int    @default(0)
 
   // SEO & Tags
-  slug String   @unique
+  slug String @unique
 
   @@index([category])
   @@index([priority])
@@ -263,6 +262,7 @@ model GalleryImage {
   title        String
   description  String?
   imageUrl     String
+  publicId     String // Cloudinary public ID for deletion
   thumbnailUrl String?
 
   // Categorization
