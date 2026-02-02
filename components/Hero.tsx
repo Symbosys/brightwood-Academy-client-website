@@ -84,7 +84,7 @@ const Hero = () => {
                         {/* Image of School Building/Flag */}
                         <div className="aspect-[4/3] md:aspect-video lg:aspect-square rounded-sm overflow-hidden shadow-2xl border-4 border-white bg-white">
                             <img
-                                src="/image/Gallery/school2.png"
+                                src="/image/Gallery/cb2293ee-e629-48e4-a35b-59e38230560d.png"
                                 alt="Brightwood School"
                                 className="w-full h-full object-contain md:object-cover brightness-90 transition-all duration-1000"
                             />
