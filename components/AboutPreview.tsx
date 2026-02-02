@@ -70,7 +70,7 @@ const AboutPreview = () => {
                     <div className="relative mt-12">
                         <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-4 border-slate-50">
                             <img
-                                src="https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&q=80"
+                                src="/image/Gallery/school image.png"
                                 alt="Brightwood Academy Building"
                                 className="w-full h-full object-cover transition-all duration-1000 hover:scale-105"
                             />
