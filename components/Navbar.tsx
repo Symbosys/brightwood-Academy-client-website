@@ -35,7 +35,7 @@ const Navbar = () => {
                 <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center text-[10px] font-bold uppercase tracking-wider">
                     <div className="flex gap-6">
                         <span className="flex items-center gap-2"><PhoneCall size={12} className="text-secondary" /> +91-7004818526</span>
-                        <span className="flex items-center gap-2"><Mail size={12} className="text-secondary" />[EMAIL_ADDRESS]</span>
+                        {/* <span className="flex items-center gap-2"><Mail size={12} className="text-secondary" />[EMAIL_ADDRESS]</span> */}
                     </div>
                     <div className="hidden md:flex gap-4 items-center">
                         <span className="bg-secondary px-2 py-0.5 rounded text-white">CBSE Affiliated</span>
@@ -76,7 +76,7 @@ const Navbar = () => {
                         </div>
                         <div className="flex flex-col">
                             <h1 className={`text-2xl font-black font-outfit uppercase tracking-tighter leading-none text-primary`}>
-                                bright <span className="text-secondary">wood</span>
+                                brightwood <span className="text-secondary">academy</span>
                             </h1>
                             <p className={`text-[10px] font-bold uppercase tracking-[0.25em] text-slate-500`}>
                                 An Autonomous Body Under MoE, Govt. of India
@@ -118,10 +118,17 @@ const Navbar = () => {
             {isOpen && (
                 <div className="fixed inset-0 bg-white z-[100] flex flex-col p-8 animate-in slide-in-from-right duration-300">
                     <div className="flex justify-between items-center mb-12">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-secondary rounded-full" />
-                            <span className="text-xl font-black font-outfit text-primary tracking-tighter">brightwood</span>
-                        </div>
+                        <Link href="/" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
+                            <div className="w-12 h-12 bg-white rounded-full border border-primary/10 flex items-center justify-center p-0.5 shadow-lg overflow-hidden relative">
+                                <Image
+                                    src="/logo.jpg"
+                                    alt="Brightwood Logo"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                            <span className="text-xl font-black font-outfit text-primary tracking-tighter uppercase italic">brightwood<span className="text-secondary not-italic">academy</span></span>
+                        </Link>
                         <button onClick={() => setIsOpen(false)} className="text-primary p-2 bg-slate-100 rounded-full"><X size={24} /></button>
                     </div>
                     <div className="flex flex-col gap-4">
@@ -136,9 +143,11 @@ const Navbar = () => {
                                 <Info size={16} className="text-slate-300" />
                             </Link>
                         ))}
-                        <button className="w-full mt-8 py-5 bg-primary text-white font-black text-xs uppercase tracking-widest rounded-xl shadow-xl shadow-primary/20">
-                            Apply Online
-                        </button>
+                        <Link href="/admissions" onClick={() => setIsOpen(false)}>
+                            <button className="w-full mt-8 py-5 bg-primary text-white font-black text-xs uppercase tracking-widest rounded-xl shadow-xl shadow-primary/20">
+                                Apply Online
+                            </button>
+                        </Link>
                     </div>
                 </div>
             )}

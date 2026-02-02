@@ -6,7 +6,7 @@ const Testimonials = () => {
         {
             name: "Smt. Anjali Sharma",
             role: "Parent | Govt. Employee",
-            text: "Being a central government employee, brightwood is our first choice. The consistency in the curriculum across different regions is a boon for my daughter's education during our transfers.",
+            text: "Being a central government employee, brightwood Academy is our first choice. The consistency in the curriculum across different regions is a boon for my daughter's education during our transfers.",
             image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80"
         },
         {
@@ -18,7 +18,7 @@ const Testimonials = () => {
         {
             name: "Sh. Vijay Vardhan",
             role: "Alumni | IAS Officer",
-            text: "The values instilled in me at brightwood  formed the bedrock of my career in public service. The sense of national integration is unparalleled in any other institution.",
+            text: "The values instilled in me at brightwood Academy formed the bedrock of my career in public service. The sense of national integration is unparalleled in any other institution.",
             image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80"
         }
     ];
@@ -64,7 +64,7 @@ const Testimonials = () => {
 
                 {/* Statutory Badges */}
                 <div className="mt-24 flex flex-wrap justify-center items-center gap-12 opacity-30 grayscale contrast-125">
-                    {['Ministry of Education', 'CBSE Affiliated', 'National Integration', 'Brightwood Sangathan'].map(item => (
+                    {['Ministry of Education', 'CBSE Affiliated', 'National Integration', 'Brightwood Academy'].map(item => (
                         <span key={item} className="text-[12px] font-black uppercase tracking-[0.4em] text-primary">{item}</span>
                     ))}
                 </div>

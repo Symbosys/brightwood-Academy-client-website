@@ -1,6 +1,7 @@
 
 import { Twitter, Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Shield, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Footer = () => {
     return (
@@ -12,12 +13,17 @@ const Footer = () => {
                     {/* Brand Section - Government/KV Style */}
                     <div className="lg:col-span-4 space-y-8">
                         <Link href="/" className="flex items-center gap-4 group">
-                            <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center text-primary border-4 border-secondary p-2">
-                                <Shield size={32} strokeWidth={2.5} />
+                            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center border-2 border-secondary/50 p-0.5 shadow-xl overflow-hidden relative">
+                                <Image
+                                    src="/logo.jpg"
+                                    alt="Brightwood Logo"
+                                    fill
+                                    className="object-cover"
+                                />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-2xl font-black font-outfit uppercase tracking-tighter leading-none">
-                                    Brightwood <span className="text-secondary">Academy</span>
+                                <span className="text-2xl font-black font-outfit uppercase tracking-tighter leading-none italic">
+                                    brightwood<span className="text-secondary not-italic">Academy</span>
                                 </span>
                                 <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest mt-1">Autonomous Body under MoE</span>
                             </div>
@@ -39,9 +45,9 @@ const Footer = () => {
                         <h4 className="text-xs font-black uppercase tracking-[0.3em] text-secondary">Institution</h4>
                         <ul className="space-y-4">
                             {[
-                                { name: 'Brightwood Website', path: '#' },
-                                { name: 'Brightwood Directory', path: '#' },
-                                { name: 'Brightwood Admissions', path: '/admissions' },
+                                { name: 'Brightwood Academy Website', path: '#' },
+                                { name: 'Brightwood Academy Directory', path: '#' },
+                                { name: 'Brightwood Academy Admissions', path: '/admissions' },
                                 { name: 'Admin Panel', path: '/login' }
                             ].map((item) => (
                                 <li key={item.name}>
@@ -77,7 +83,7 @@ const Footer = () => {
                             <div className="flex items-start gap-4">
                                 <MapPin size={20} className="text-secondary shrink-0 mt-1" />
                                 <p className="text-white/80 text-[11px] leading-relaxed uppercase tracking-widest font-bold">
-                                    Brightwood No. 1, <br /> Hirhi (Near Bhokta Bagicha Railway Station) Lohardaga Jhrkhand 835302
+                                    Brightwood Academy No. 1, <br /> Hirhi (Near Bhokta Bagicha Railway Station) Lohardaga Jhrkhand 835302
                                 </p>
                             </div>
                             <div className="flex items-center gap-4">

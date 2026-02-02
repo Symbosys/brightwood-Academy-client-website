@@ -1,5 +1,6 @@
 
 import { ArrowRight, ChevronRight, FileText, UserCheck } from 'lucide-react';
+import Link from 'next/link';
 
 const Hero = () => {
     return (
@@ -33,13 +34,15 @@ const Hero = () => {
                         </p>
 
                         <div className="flex flex-wrap gap-4 pt-4">
-                            <button className="px-10 py-5 bg-primary hover:bg-secondary text-white font-black text-xs uppercase tracking-[0.3em] rounded-sm transition-all shadow-xl shadow-primary/10 flex items-center gap-3 active:scale-95">
-                                <UserCheck size={18} /> Admission Portal
-                            </button>
-                            <button className="px-10 py-5 bg-white border-2 border-primary text-primary font-black text-xs uppercase tracking-[0.3em] rounded-sm hover:bg-slate-50 transition-all flex items-center gap-3 group/btn">
-                                <FileText size={18} className="text-secondary" /> Prospectus 2024
-                                <ChevronRight size={16} className="group-hover/btn:translate-x-2 transition-transform" />
-                            </button>
+                            <Link href="/admissions">
+                                <button className="px-10 py-5 bg-primary hover:bg-secondary text-white font-black text-xs uppercase tracking-[0.3em] rounded-sm transition-all shadow-xl shadow-primary/10 flex items-center gap-3 active:scale-95">
+                                    <UserCheck size={18} /> Admission Portal
+                                </button>
+                            </Link>
+                            {/* <button className="px-10 py-5 bg-white border-2 border-primary text-primary font-black text-xs uppercase tracking-[0.3em] rounded-sm hover:bg-slate-50 transition-all flex items-center gap-3 group/btn"> */}
+                            {/* <FileText size={18} className="text-secondary" /> Prospectus 2024 */}
+                            {/* <ChevronRight size={16} className="group-hover/btn:translate-x-2 transition-transform" /> */}
+                            {/* </button> */}
                         </div>
                     </div>
 
@@ -79,11 +82,11 @@ const Hero = () => {
                         </div>
 
                         {/* Image of School Building/Flag */}
-                        <div className="aspect-video lg:aspect-[2/2] rounded-sm overflow-hidden shadow-2xl border-4 border-white">
+                        <div className="aspect-[4/3] md:aspect-video lg:aspect-square rounded-sm overflow-hidden shadow-2xl border-4 border-white bg-white">
                             <img
                                 src="/image/Gallery/uhzzgny19ldo0vqh6ram.jpg"
                                 alt="Brightwood School"
-                                className="w-full h-full object-cover brightness-90 hover: transition-all duration-1000"
+                                className="w-full h-full object-contain md:object-cover brightness-90 transition-all duration-1000"
                             />
                         </div>
                     </div>
