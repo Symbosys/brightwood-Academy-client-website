@@ -63,7 +63,7 @@ const Navbar = () => {
 
                     {/* Logo Section - Formal KV Style */}
                     <Link href="/" className="flex items-center gap-5 group">
-                        <div className={`${scrolled ? 'w-14 h-14' : 'w-20 h-20'} bg-white rounded-full border-2 border-primary/10 flex items-center justify-center p-0.5 shadow-xl transition-all duration-500 group-hover:scale-110 group-hover:border-secondary overflow-hidden`}>
+                        <div className={`${scrolled ? 'w-14 h-14' : 'w-20 h-20'} shrink-0 bg-white rounded-full border-2 border-primary/10 flex items-center justify-center p-0.5 shadow-xl transition-all duration-500 group-hover:scale-110 group-hover:border-secondary overflow-hidden`}>
                             <div className="relative w-full h-full rounded-full overflow-hidden">
                                 <Image
                                     src="/logo.jpg"
@@ -78,9 +78,6 @@ const Navbar = () => {
                             <h1 className={`text-2xl font-black font-outfit uppercase tracking-tighter leading-none text-primary`}>
                                 brightwood <span className="text-secondary">academy</span>
                             </h1>
-                            <p className={`text-[10px] font-bold uppercase tracking-[0.25em] text-slate-500`}>
-                                An Autonomous Body Under MoE, Govt. of India
-                            </p>
                         </div>
                     </Link>
 
@@ -119,7 +116,7 @@ const Navbar = () => {
                 <div className="fixed inset-0 bg-white z-[100] flex flex-col p-8 animate-in slide-in-from-right duration-300">
                     <div className="flex justify-between items-center mb-12">
                         <Link href="/" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
-                            <div className="w-12 h-12 bg-white rounded-full border border-primary/10 flex items-center justify-center p-0.5 shadow-lg overflow-hidden relative">
+                            <div className="w-12 h-12 shrink-0 bg-white rounded-full border border-primary/10 flex items-center justify-center p-0.5 shadow-lg overflow-hidden relative">
                                 <Image
                                     src="/logo.jpg"
                                     alt="Brightwood Logo"
