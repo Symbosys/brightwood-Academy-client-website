@@ -200,7 +200,7 @@ export default function AdminNoticesClient({
                     <p className="text-sm text-slate-600 mt-1">Create and manage school notices</p>
                 </div>
                 <button
-                    onClick={() => router.push('/admin/notices/create')}
+                    onClick={() => router.push('/notices/create')}
                     className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-secondary text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-primary/20"
                 >
                     <Plus size={18} />
