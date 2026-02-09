@@ -9,6 +9,8 @@ import {
     type GetGalleryQuery
 } from "@/validation/gallery";
 import { revalidatePath } from "next/cache";
+import fs from "fs";
+import path from "path";
 
 /**
  * Server action to upload an image to Cloudinary
@@ -18,12 +20,26 @@ export async function uploadImageAction(formData: FormData) {
         const file = formData.get("file") as File;
         if (!file) throw new Error("No file uploaded");
 
+        // Check environment variables
+        if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+            throw new Error("Cloudinary configuration is missing on the server. Please check your environment variables.");
+        }
+
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
         const result = await uploadToCloudinary(buffer, "brightwood/gallery", file.type);
+        const successEntry = `[${new Date().toISOString()}] Gallery Upload Success\n\n`;
+        fs.appendFileSync(path.join(process.cwd(), "debug_upload.log"), successEntry);
         return { success: true, ...result };
     } catch (error: any) {
+        const logEntry = `[${new Date().toISOString()}] Gallery Upload Error:\nMessage: ${error.message}\nStack: ${error.stack}\n${JSON.stringify(error, null, 2)}\n\n`;
+        try {
+            fs.appendFileSync(path.join(process.cwd(), "debug_upload.log"), logEntry);
+        } catch (logErr) {
+            console.error("Failed to write to debug log:", logErr);
+        }
+        
         console.error("Gallery Upload Error Details:", {
             message: error.message,
             stack: error.stack,

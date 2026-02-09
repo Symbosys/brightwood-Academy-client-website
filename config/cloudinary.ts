@@ -26,8 +26,9 @@ export const uploadToCloudinary = async (
     fileType: string = 'image'
 ): Promise<{ public_id: string; secure_url: string }> => {
     try {
+        const mimeType = fileType || 'image/png';
         const base64Data = fileBuffer.toString('base64');
-        const dataURI = `data:${fileType};base64,${base64Data}`;
+        const dataURI = `data:${mimeType};base64,${base64Data}`;
         
         const result = await cloudinary.uploader.upload(dataURI, {
             folder: folder,
