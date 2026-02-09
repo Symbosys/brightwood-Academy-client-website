@@ -21,9 +21,40 @@ export async function uploadImageAction(formData: FormData) {
         if (!file) throw new Error("No file uploaded");
 
         // Check environment variables
-        if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-            throw new Error("Cloudinary configuration is missing on the server. Please check your environment variables.");
+        const envPath = path.join(process.cwd(), '.env');
+        const envExists = fs.existsSync(envPath);
+        
+        // Manual fallback if process.env is missing keys
+        if (envExists && (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY)) {
+            try {
+                const envContent = fs.readFileSync(envPath, 'utf-8');
+                envContent.split('\n').forEach(line => {
+                    const [key, ...valueParts] = line.split('=');
+                    if (key && valueParts.length > 0) {
+                        const value = valueParts.join('=').trim().replace(/^["']|["']$/g, '');
+                        if (key.trim().startsWith('CLOUDINARY_')) {
+                            process.env[key.trim()] = value;
+                        }
+                    }
+                });
+            } catch (err) {
+                console.error("Manual env load failed:", err);
+            }
         }
+        
+        const debugLog = `[${new Date().toISOString()}] Debug Env Check:\nCWD: ${process.cwd()}\n.env Path: ${envPath}\n.env Exists: ${envExists}\nCloudinary Name Var: ${!!process.env.CLOUDINARY_CLOUD_NAME}\n\n`;
+        fs.appendFileSync(path.join(process.cwd(), "debug_upload.log"), debugLog);
+
+        if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+            throw new Error(`Cloudinary configuration is missing. .env exists: ${envExists}. CWD: ${process.cwd()}. Keys visible: ${Object.keys(process.env).filter(k => k.startsWith('CLOUDINARY')).join(', ')}`);
+        }
+        
+        // Re-sync cloudinary config if we manually loaded
+        cloudinary.config({
+            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            api_secret: process.env.CLOUDINARY_API_SECRET,
+        });
 
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
