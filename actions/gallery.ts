@@ -21,10 +21,14 @@ export async function uploadImageAction(formData: FormData) {
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        const result = await uploadToCloudinary(buffer, "brightwood/gallery");
+        const result = await uploadToCloudinary(buffer, "brightwood/gallery", file.type);
         return { success: true, ...result };
     } catch (error: any) {
-        console.error("Upload error:", error);
+        console.error("Gallery Upload Error Details:", {
+            message: error.message,
+            stack: error.stack,
+            error
+        });
         return { success: false, error: error.message || "Upload failed" };
     }
 }
