@@ -1,76 +1,66 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useTransition, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createNotice } from '@/actions/notice';
 import { Loader2, ArrowLeft, Save } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { noticeSchema, type NoticeInput } from '@/validation/notice';
+import { generateSlug } from '@/lib/utils';
 
 export default function CreateNoticeForm() {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
-    const [formData, setFormData] = useState({
-        title: '',
-        description: '',
-        content: '',
-        category: 'GENERAL',
-        priority: 'NORMAL',
-        slug: '',
-        author: 'Admin User', // Replace with actual admin name from session
-        publishDate: new Date().toISOString().split('T')[0],
-        expiryDate: '',
-        eventDate: '',
-        isPublished: false,
-        isPinned: false,
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: { errors }
+    } = useForm({
+        resolver: zodResolver(noticeSchema),
+        defaultValues: {
+            title: '',
+            description: '',
+            content: '',
+            category: 'GENERAL',
+            priority: 'NORMAL',
+            slug: '',
+            author: 'Admin User', // Replace with actual admin name from session
+            publishDate: new Date().toISOString().split('T')[0],
+            expiryDate: '',
+            eventDate: '',
+            isPublished: false,
+            isPinned: false,
+            isActive: true,
+        }
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value, type } = e.target;
+    const title = watch('title');
 
-        if (type === 'checkbox') {
-            const checked = (e.target as HTMLInputElement).checked;
-            setFormData(prev => ({ ...prev, [name]: checked }));
-        } else {
-            setFormData(prev => ({ ...prev, [name]: value }));
-
-            // Auto-generate slug from title
-            if (name === 'title') {
-                const slug = value
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/^-+|-+$/g, '');
-                setFormData(prev => ({ ...prev, slug }));
-            }
+    // Auto-generate slug from title
+    useEffect(() => {
+        if (title) {
+            setValue('slug', generateSlug(title), { shouldValidate: true });
         }
-    };
+    }, [title, setValue]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!formData.title || !formData.description || !formData.slug) {
-            alert('Please fill in all required fields');
-            return;
-        }
-
+    const onSubmit = async (data: NoticeInput) => {
         startTransition(async () => {
-            const result = await createNotice({
-                title: formData.title,
-                description: formData.description,
-                content: formData.content || null,
-                category: formData.category as any,
-                priority: formData.priority as any,
-                slug: formData.slug,
-                author: formData.author,
-                publishDate: new Date(formData.publishDate),
-                expiryDate: formData.expiryDate ? new Date(formData.expiryDate) : null,
-                eventDate: formData.eventDate ? new Date(formData.eventDate) : null,
-                isPublished: formData.isPublished,
-                isPinned: formData.isPinned,
-                isActive: true,
-            });
+            // Filter out empty strings for date fields to allow Zod to handle optional/nullable
+            const formattedData = {
+                ...data,
+                expiryDate: data.expiryDate || null,
+                eventDate: data.eventDate || null,
+            };
+
+            const result = await createNotice(formattedData);
 
             if (result.success) {
                 alert('Notice created successfully!');
-                router.push('/admin/notices');
+                router.push('/notices');
                 router.refresh();
             } else {
                 alert(result.error || 'Failed to create notice');
@@ -79,7 +69,7 @@ export default function CreateNoticeForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Back Button */}
             <button
                 type="button"
@@ -99,31 +89,18 @@ export default function CreateNoticeForm() {
                     </label>
                     <input
                         type="text"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm"
+                        {...register('title')}
+                        className={`w-full px-4 py-3 bg-slate-50 border ${errors.title ? 'border-red-500' : 'border-slate-200'} rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm`}
                         placeholder="Enter notice title"
                     />
+                    {errors.title && (
+                        <p className="text-xs text-red-500 mt-1">{errors.title.message}</p>
+                    )}
                 </div>
 
-                {/* Slug */}
-                <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">
-                        Slug (URL) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        name="slug"
-                        value={formData.slug}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm"
-                        placeholder="notice-slug"
-                    />
-                    <p className="text-xs text-slate-500 mt-1">Auto-generated from title, but you can edit it</p>
-                </div>
+                {/* Slug display (readonly or just hidden as requested) */}
+                {/* The user said "don't show input box of slug" */}
+                <input type="hidden" {...register('slug')} />
 
                 {/* Description */}
                 <div>
@@ -131,14 +108,14 @@ export default function CreateNoticeForm() {
                         Description <span className="text-red-500">*</span>
                     </label>
                     <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        required
+                        {...register('description')}
                         rows={3}
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm resize-none"
+                        className={`w-full px-4 py-3 bg-slate-50 border ${errors.description ? 'border-red-500' : 'border-slate-200'} rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm resize-none`}
                         placeholder="Brief description of the notice"
                     />
+                    {errors.description && (
+                        <p className="text-xs text-red-500 mt-1">{errors.description.message}</p>
+                    )}
                 </div>
 
                 {/* Content */}
@@ -147,13 +124,14 @@ export default function CreateNoticeForm() {
                         Full Content (Optional)
                     </label>
                     <textarea
-                        name="content"
-                        value={formData.content}
-                        onChange={handleChange}
+                        {...register('content')}
                         rows={6}
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm resize-none"
+                        className={`w-full px-4 py-3 bg-slate-50 border ${errors.content ? 'border-red-500' : 'border-slate-200'} rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm resize-none`}
                         placeholder="Detailed content of the notice"
                     />
+                    {errors.content && (
+                        <p className="text-xs text-red-500 mt-1">{errors.content.message}</p>
+                    )}
                 </div>
 
                 {/* Category and Priority */}
@@ -163,10 +141,7 @@ export default function CreateNoticeForm() {
                             Category <span className="text-red-500">*</span>
                         </label>
                         <select
-                            name="category"
-                            value={formData.category}
-                            onChange={handleChange}
-                            required
+                            {...register('category')}
                             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm"
                         >
                             <option value="GENERAL">General</option>
@@ -184,6 +159,9 @@ export default function CreateNoticeForm() {
                             <option value="VACANCY">Vacancy</option>
                             <option value="TENDER">Tender</option>
                         </select>
+                        {errors.category && (
+                            <p className="text-xs text-red-500 mt-1">{errors.category.message}</p>
+                        )}
                     </div>
 
                     <div>
@@ -191,10 +169,7 @@ export default function CreateNoticeForm() {
                             Priority <span className="text-red-500">*</span>
                         </label>
                         <select
-                            name="priority"
-                            value={formData.priority}
-                            onChange={handleChange}
-                            required
+                            {...register('priority')}
                             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm"
                         >
                             <option value="LOW">Low</option>
@@ -202,6 +177,9 @@ export default function CreateNoticeForm() {
                             <option value="HIGH">High</option>
                             <option value="URGENT">Urgent</option>
                         </select>
+                        {errors.priority && (
+                            <p className="text-xs text-red-500 mt-1">{errors.priority.message}</p>
+                        )}
                     </div>
                 </div>
 
@@ -213,12 +191,12 @@ export default function CreateNoticeForm() {
                         </label>
                         <input
                             type="date"
-                            name="publishDate"
-                            value={formData.publishDate}
-                            onChange={handleChange}
-                            required
-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm"
+                            {...register('publishDate')}
+                            className={`w-full px-4 py-3 bg-slate-50 border ${errors.publishDate ? 'border-red-500' : 'border-slate-200'} rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm`}
                         />
+                        {errors.publishDate && (
+                            <p className="text-xs text-red-500 mt-1">{errors.publishDate.message}</p>
+                        )}
                     </div>
 
                     <div>
@@ -227,11 +205,12 @@ export default function CreateNoticeForm() {
                         </label>
                         <input
                             type="date"
-                            name="expiryDate"
-                            value={formData.expiryDate}
-                            onChange={handleChange}
+                            {...register('expiryDate')}
                             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm"
                         />
+                        {errors.expiryDate && (
+                            <p className="text-xs text-red-500 mt-1">{errors.expiryDate.message}</p>
+                        )}
                     </div>
 
                     <div>
@@ -240,11 +219,12 @@ export default function CreateNoticeForm() {
                         </label>
                         <input
                             type="date"
-                            name="eventDate"
-                            value={formData.eventDate}
-                            onChange={handleChange}
+                            {...register('eventDate')}
                             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm"
                         />
+                        {errors.eventDate && (
+                            <p className="text-xs text-red-500 mt-1">{errors.eventDate.message}</p>
+                        )}
                     </div>
                 </div>
 
@@ -255,13 +235,13 @@ export default function CreateNoticeForm() {
                     </label>
                     <input
                         type="text"
-                        name="author"
-                        value={formData.author}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm"
+                        {...register('author')}
+                        className={`w-full px-4 py-3 bg-slate-50 border ${errors.author ? 'border-red-500' : 'border-slate-200'} rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-sm`}
                         placeholder="Author name"
                     />
+                    {errors.author && (
+                        <p className="text-xs text-red-500 mt-1">{errors.author.message}</p>
+                    )}
                 </div>
 
                 {/* Checkboxes */}
@@ -269,9 +249,7 @@ export default function CreateNoticeForm() {
                     <label className="flex items-center gap-2 cursor-pointer">
                         <input
                             type="checkbox"
-                            name="isPublished"
-                            checked={formData.isPublished}
-                            onChange={handleChange}
+                            {...register('isPublished')}
                             className="w-4 h-4 text-primary bg-slate-100 border-slate-300 rounded focus:ring-primary focus:ring-2"
                         />
                         <span className="text-sm font-bold text-slate-700">Publish immediately</span>
@@ -280,9 +258,7 @@ export default function CreateNoticeForm() {
                     <label className="flex items-center gap-2 cursor-pointer">
                         <input
                             type="checkbox"
-                            name="isPinned"
-                            checked={formData.isPinned}
-                            onChange={handleChange}
+                            {...register('isPinned')}
                             className="w-4 h-4 text-primary bg-slate-100 border-slate-300 rounded focus:ring-primary focus:ring-2"
                         />
                         <span className="text-sm font-bold text-slate-700">Pin to top</span>

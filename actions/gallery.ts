@@ -1,33 +1,20 @@
 "use server";
 
+import cloudinary, { uploadToCloudinary } from "@/config/cloudinary";
 import { prisma } from "@/config/prisma";
 import {
     createGalleryImageSchema,
-    updateGalleryImageSchema,
     getGalleryQuerySchema,
-    type CreateGalleryImageInput,
-    type UpdateGalleryImageInput,
+    updateGalleryImageSchema,
     type GetGalleryQuery
 } from "@/validation/gallery";
 import { revalidatePath } from "next/cache";
-import { getSession } from "@/lib/auth";
-import cloudinary, { uploadToCloudinary } from "@/config/cloudinary";
-
-// Helper to check if user is admin
-async function checkAdmin() {
-    const session = await getSession();
-    if (!session || !session.user || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN" && session.user.role !== "EDITOR")) {
-        throw new Error("Unauthorized: Admin access required");
-    }
-    return session.user;
-}
 
 /**
  * Server action to upload an image to Cloudinary
  */
 export async function uploadImageAction(formData: FormData) {
     try {
-        await checkAdmin();
         const file = formData.get("file") as File;
         if (!file) throw new Error("No file uploaded");
 
@@ -47,15 +34,13 @@ export async function uploadImageAction(formData: FormData) {
  */
 export async function createGalleryImage(data: any) {
     try {
-        const user = await checkAdmin();
-
         // Transform incoming data if needed (e.g. date strings to Date objects)
         const validatedData = createGalleryImageSchema.parse(data);
 
         const image = await prisma.galleryImage.create({
             data: {
                 ...validatedData,
-                uploadedBy: user.name || user.email,
+                uploadedBy: "",
             },
         });
 
@@ -82,8 +67,6 @@ export async function createGalleryImage(data: any) {
  */
 export async function updateGalleryImage(data: any) {
     try {
-        await checkAdmin();
-
         const validatedData = updateGalleryImageSchema.parse(data);
         const { id, ...updateData } = validatedData;
 
@@ -114,8 +97,6 @@ export async function updateGalleryImage(data: any) {
  */
 export async function deleteGalleryImage(id: string) {
     try {
-        await checkAdmin();
-
         // 1. Get the image record to get the publicId
         const image = await prisma.galleryImage.findUnique({
             where: { id },
@@ -207,8 +188,6 @@ export async function getGalleryImages(query: Partial<GetGalleryQuery> = {}) {
  */
 export async function toggleImageVisibility(id: string) {
     try {
-        await checkAdmin();
-
         const image = await prisma.galleryImage.findUnique({
             where: { id },
             select: { isPublished: true },

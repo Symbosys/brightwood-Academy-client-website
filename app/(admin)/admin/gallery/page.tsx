@@ -82,6 +82,13 @@ export default function GalleryAdminPage() {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            // Check file size (5MB limit)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size exceeds 5MB limit. Please upload a smaller image.');
+                e.target.value = ''; // Reset input
+                return;
+            }
+
             setUploadFile(file);
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -536,6 +543,22 @@ export default function GalleryAdminPage() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Loading Overlay */}
+            {actionLoading && (
+                <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-primary/20 backdrop-blur-md animate-fade-in">
+                    <div className="bg-white p-10 rounded-[2.5rem] shadow-2xl flex flex-col items-center gap-6 border border-white/50 animate-fade-in-up">
+                        <div className="relative">
+                            <div className="w-20 h-20 border-4 border-slate-100 rounded-full animate-pulse"></div>
+                            <Loader2 size={40} className="text-primary animate-spin absolute inset-0 m-auto" />
+                        </div>
+                        <div className="text-center">
+                            <h3 className="text-xl font-black text-primary uppercase tracking-tighter leading-none">Processing</h3>
+                            <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-2 animate-pulse">Please wait a moment...</p>
+                        </div>
                     </div>
                 </div>
             )}

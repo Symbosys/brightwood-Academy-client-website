@@ -184,9 +184,6 @@ export default function AdminAdmissionsClient({
                         Manage and review all admission applications
                     </p>
                 </div>
-                <button className="px-6 py-3 bg-primary hover:bg-secondary text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-primary/20">
-                    + New Application
-                </button>
             </div>
 
             {/* Stats Cards */}

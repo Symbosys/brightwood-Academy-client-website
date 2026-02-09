@@ -1,9 +1,15 @@
 
-import { Twitter, Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Shield, ExternalLink } from 'lucide-react';
+import { Facebook, Instagram, Youtube, Mail, MapPin, Phone, Shield, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 const Footer = () => {
+    const socialLinks = [
+        { Icon: Facebook, href: "https://www.facebook.com/share/1DpZCZ3tPW/" },
+        { Icon: Instagram, href: "https://www.instagram.com/invites/contact/?utm_source=ig_contact_invite&utm_medium=copy_link&utm_content=vw3m05b" },
+        { Icon: Youtube, href: "https://youtube.com/@brightwoodacademy4?si=RF7M_Brm9_Jt8ePn" }
+    ];
+
     return (
         <footer className="bg-primary text-white pt-24 pb-12 overflow-hidden border-t-8 border-secondary">
             <div className="max-w-7xl mx-auto px-6">
@@ -29,17 +35,23 @@ const Footer = () => {
                             </div>
                         </Link>
                         <p className="text-white/60 text-sm leading-relaxed max-w-sm font-medium">
-                            Dedicated to excellence in school education, Symbosys provide quality education to the children of transferable central government employees.
+                            Dedicated to excellence in school education, Brightwood Academy provide quality education to the children of transferable central government employees.
                         </p>
                         <div className="flex gap-4">
-                            {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
-                                <a key={i} href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-secondary hover:border-secondary transition-all">
+                            {socialLinks.map(({ Icon, href }, i) => (
+                                <a 
+                                    key={i} 
+                                    href={href} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-secondary hover:border-secondary transition-all"
+                                >
                                     <Icon size={18} />
                                 </a>
                             ))}
                         </div>
                     </div>
-
+ 
                     {/* Official Links */}
                     <div className="lg:col-span-2 space-y-8">
                         <h4 className="text-xs font-black uppercase tracking-[0.3em] text-secondary">Institution</h4>

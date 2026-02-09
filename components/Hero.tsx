@@ -18,7 +18,7 @@ const Hero = () => {
                     {/* Left: Formal Content */}
                     <div className="lg:col-span-12 xl:col-span-7 space-y-10 group">
                         <div className="inline-flex items-center gap-3 px-6 py-2 bg-primary/5 border-l-8 border-primary rounded-r-xl">
-                            <span className="text-[12px] font-black uppercase tracking-[0.4em] text-primary">Tattvam Pūṣan Apāvr̥ṇu</span>
+                            <span className="text-[12px] font-black uppercase tracking-[0.4em] text-primary">TAT TWAM PUSHAN APAVRINU</span>
                         </div>
 
                         <div className="space-y-4">
