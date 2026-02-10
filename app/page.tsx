@@ -5,17 +5,24 @@ import Achievements from '../components/Achievements';
 import Testimonials from '../components/Testimonials';
 import Footer from '../components/Footer';
 import Link from 'next/link';
-import { ArrowRight, Bell, FileText, Download, Quote } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, Bell, FileText, Download, Quote, Image as ImageIcon } from 'lucide-react';
 
 import { getAllNotices } from '@/actions/notice';
+import { getGalleryImages } from '@/actions/gallery';
 
 export default async function Homepage() {
-  const noticesResponse = await getAllNotices({ limit: 10, isPublished: true });
+  const [noticesResponse, galleryResponse] = await Promise.all([
+    getAllNotices({ limit: 10, isPublished: true }),
+    getGalleryImages({ limit: 6, isPublished: true })
+  ]);
+
   const notices = noticesResponse.success ? noticesResponse.data : [];
+  const galleryImages = galleryResponse.success ? galleryResponse.data : [];
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Navbar />
+      <Navbar notices={notices} />
 
       <Hero />
 
@@ -104,6 +111,50 @@ export default async function Homepage() {
 
       <AboutPreview />
       <Achievements />
+
+      {/* Gallery Highlight Section */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
+            <div className="space-y-4">
+              <h3 className="text-secondary text-[10px] font-black uppercase tracking-[0.5em] flex items-center gap-4">
+                <ImageIcon size={16} /> Photo Gallery
+              </h3>
+              <h2 className="text-4xl lg:text-6xl font-black font-outfit text-primary leading-none uppercase tracking-tighter italic">
+                Brightwood <br /> <span className="text-secondary">Moments.</span>
+              </h2>
+            </div>
+            <Link href="/gallery" className="flex items-center gap-4 text-primary font-black text-[10px] uppercase tracking-[0.5em] group border-b-2 border-primary/10 pb-2">
+              <span>View Full Archive</span>
+              <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-xl shadow-slate-200">
+                <ArrowRight size={18} />
+              </div>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {galleryImages && galleryImages.length > 0 ? (
+              galleryImages.map((img: any, idx: number) => (
+                <Link key={img.id} href="/gallery" className="relative aspect-square overflow-hidden rounded-xl group shadow-lg">
+                  <Image
+                    src={img.imageUrl}
+                    alt={img.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4 text-center">
+                    <p className="text-white text-[8px] font-black uppercase tracking-widest">{img.title}</p>
+                  </div>
+                </Link>
+              ))
+            ) : (
+                <div className="col-span-full py-20 text-center border-2 border-dashed border-slate-100 rounded-2xl">
+                    <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Capturing memories... Stay tuned!</p>
+                </div>
+            )}
+          </div>
+        </div>
+      </section>
 
       <Testimonials />
       <Footer />

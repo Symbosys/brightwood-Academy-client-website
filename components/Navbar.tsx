@@ -5,7 +5,11 @@ import { Shield, Menu, X, GraduationCap, PhoneCall, Mail, Info } from 'lucide-re
 import Link from 'next/link';
 import Image from 'next/image';
 
-const Navbar = () => {
+interface NavbarProps {
+    notices?: any[];
+}
+
+const Navbar = ({ notices = [] }: NavbarProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -35,7 +39,6 @@ const Navbar = () => {
                 <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center text-[10px] font-bold uppercase tracking-wider">
                     <div className="flex gap-6">
                         <span className="flex items-center gap-2"><PhoneCall size={12} className="text-secondary" /> +91-7004818526</span>
-                        {/* <span className="flex items-center gap-2"><Mail size={12} className="text-secondary" />[EMAIL_ADDRESS]</span> */}
                     </div>
                     <div className="hidden md:flex gap-4 items-center">
                         <span className="bg-secondary px-2 py-0.5 rounded text-white">CBSE Affiliated</span>
@@ -48,11 +51,19 @@ const Navbar = () => {
                     <div className="flex items-center overflow-hidden whitespace-nowrap">
                         <div className="bg-secondary px-4 py-1 text-[10px] font-black uppercase tracking-widest z-10 shadow-lg shrink-0">Latest Updates</div>
                         <div className="animate-ticker text-[10px] font-bold uppercase tracking-widest text-white/80 inline-block pl-[100%]">
-                            • Admission open for Class I session 2025-26
-                            • Annual Sports Meet results scheduled for next week
-                            • Teacher's Day celebrations gallery updated
-                            • Swachhta Pakhwada 2024 mass pledge conducted
-                            • Brightwood Regional Science Exhibition starts from tomorrow
+                            {notices.length > 0 ? (
+                                notices.map((n, i) => (
+                                    <span key={i} className="mr-8">
+                                        • {n.title}
+                                    </span>
+                                ))
+                            ) : (
+                                <>
+                                    <span className="mr-8">• Admission open for Class I session 2025-26</span>
+                                    <span className="mr-8">• Annual Sports Meet results scheduled for next week</span>
+                                    <span className="mr-8">• New archive photos added to our gallery</span>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
