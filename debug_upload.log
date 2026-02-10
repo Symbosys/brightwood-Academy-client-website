@@ -1,2 +1,10 @@
 [2026-02-09T11:45:54.936Z] Gallery Upload Success
 
+[2026-02-10T04:20:30.741Z] Debug Env Check:
+CWD: C:\Users\hp\Desktop\brightwood\client
+.env Path: C:\Users\hp\Desktop\brightwood\client\.env
+.env Exists: true
+Cloudinary Name Var: true
+
+[2026-02-10T04:20:36.042Z] Gallery Upload Success
+

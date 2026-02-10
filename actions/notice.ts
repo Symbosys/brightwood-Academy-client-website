@@ -49,7 +49,7 @@ export async function createNotice(data: NoticeInput) {
 
         // Revalidate relevant pages
         revalidatePath("/news");
-        revalidatePath("/admin/notices");
+        revalidatePath("/notices");
 
         return {
             success: true,
@@ -113,8 +113,8 @@ export async function updateNotice(input: UpdateNoticeInput) {
 
         // Revalidate relevant pages
         revalidatePath("/news");
-        revalidatePath("/admin/notices");
-        revalidatePath(`/news/${notice.slug}`);
+        revalidatePath("/notices");
+        revalidatePath(`/notices/${notice.slug}`);
 
         return {
             success: true,
@@ -349,7 +349,7 @@ export async function deleteNotice(id: string) {
 
         // Revalidate relevant pages
         revalidatePath("/news");
-        revalidatePath("/admin/notices");
+        revalidatePath("/notices");
 
         return {
             success: true,
@@ -396,7 +396,7 @@ export async function addNoticeAttachment(data: NoticeAttachmentInput) {
 
         // Revalidate relevant pages
         revalidatePath("/news");
-        revalidatePath("/admin/notices");
+        revalidatePath("/notices");
 
         return {
             success: true,
@@ -444,7 +444,7 @@ export async function deleteNoticeAttachment(id: string) {
 
         // Revalidate relevant pages
         revalidatePath("/news");
-        revalidatePath("/admin/notices");
+        revalidatePath("/notices");
 
         return {
             success: true,
@@ -648,7 +648,7 @@ export async function bulkDeleteNotices(ids: string[]) {
 
         // Revalidate relevant pages
         revalidatePath("/news");
-        revalidatePath("/admin/notices");
+        revalidatePath("/notices");
 
         return {
             success: true,
@@ -693,7 +693,7 @@ export async function toggleNoticePublishStatus(id: string) {
 
         // Revalidate relevant pages
         revalidatePath("/news");
-        revalidatePath("/admin/notices");
+        revalidatePath("/notices");
 
         return {
             success: true,
@@ -738,7 +738,7 @@ export async function toggleNoticePinStatus(id: string) {
 
         // Revalidate relevant pages
         revalidatePath("/news");
-        revalidatePath("/admin/notices");
+        revalidatePath("/notices");
 
         return {
             success: true,
