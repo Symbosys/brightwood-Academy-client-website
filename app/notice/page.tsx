@@ -7,10 +7,14 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 
+import { useRouter } from 'next/navigation';
+
 const NoticePageContent = () => {
+    const router = useRouter();
     const [notices, setNotices] = useState<any[]>([]);
     const [pinnedNotices, setPinnedNotices] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [navigatingId, setNavigatingId] = useState<string | null>(null);
     const [filter, setFilter] = useState('ALL');
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -80,9 +84,20 @@ const NoticePageContent = () => {
                                         {new Date(notice.publishDate).toLocaleDateString()}
                                     </div>
                                 </div>
-                                <Link href={`/notice/${notice.slug}`} className="mt-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:gap-4 transition-all">
-                                    View Details <ArrowRight size={14} className="text-secondary" />
-                                </Link>
+                                <button 
+                                    onClick={() => {
+                                        setNavigatingId(notice.id);
+                                        router.push(`/notice/${notice.slug}`);
+                                    }}
+                                    className="mt-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:gap-4 transition-all disabled:opacity-50"
+                                    disabled={navigatingId === notice.id}
+                                >
+                                    {navigatingId === notice.id ? (
+                                        <>Opening... <Loader2 size={14} className="animate-spin text-secondary" /></>
+                                    ) : (
+                                        <>View Details <ArrowRight size={14} className="text-secondary" /></>
+                                    )}
+                                </button>
                             </div>
                         ))}
                     </div>
@@ -145,9 +160,21 @@ const NoticePageContent = () => {
                                         <Download size={20} />
                                     </button>
                                 )}
-                                <Link href={`/notice/${notice.slug}`} className="px-8 py-4 bg-primary text-white font-black text-[11px] uppercase tracking-[0.3em] rounded-xl flex items-center gap-3 group-hover:shadow-2xl group-hover:shadow-primary/30 transition-all hover:bg-secondary">
-                                    <Eye size={16} /> View Notice
-                                </Link>
+                                <button 
+                                    onClick={() => {
+                                        setNavigatingId(notice.id);
+                                        router.push(`/notice/${notice.slug}`);
+                                    }}
+                                    disabled={navigatingId === notice.id}
+                                    className="px-8 py-4 bg-primary text-white font-black text-[11px] uppercase tracking-[0.3em] rounded-xl flex items-center gap-3 group-hover:shadow-2xl group-hover:shadow-primary/30 transition-all hover:bg-secondary disabled:opacity-70"
+                                >
+                                    {navigatingId === notice.id ? (
+                                        <Loader2 size={16} className="animate-spin" />
+                                    ) : (
+                                        <Eye size={16} />
+                                    )}
+                                    {navigatingId === notice.id ? 'PLEASE WAIT...' : 'View Notice'}
+                                </button>
                             </div>
                         </div>
                     ))
