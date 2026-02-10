@@ -9,8 +9,6 @@ import {
     type GetGalleryQuery
 } from "@/validation/gallery";
 import { revalidatePath } from "next/cache";
-import fs from "fs";
-import path from "path";
 
 /**
  * Server action to upload an image to Cloudinary
@@ -20,36 +18,11 @@ export async function uploadImageAction(formData: FormData) {
         const file = formData.get("file") as File;
         if (!file) throw new Error("No file uploaded");
 
-        // Check environment variables
-        const envPath = path.join(process.cwd(), '.env');
-        const envExists = fs.existsSync(envPath);
-        
-        // Manual fallback if process.env is missing keys
-        if (envExists && (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY)) {
-            try {
-                const envContent = fs.readFileSync(envPath, 'utf-8');
-                envContent.split('\n').forEach(line => {
-                    const [key, ...valueParts] = line.split('=');
-                    if (key && valueParts.length > 0) {
-                        const value = valueParts.join('=').trim().replace(/^["']|["']$/g, '');
-                        if (key.trim().startsWith('CLOUDINARY_')) {
-                            process.env[key.trim()] = value;
-                        }
-                    }
-                });
-            } catch (err) {
-                console.error("Manual env load failed:", err);
-            }
-        }
-        
-        const debugLog = `[${new Date().toISOString()}] Debug Env Check:\nCWD: ${process.cwd()}\n.env Path: ${envPath}\n.env Exists: ${envExists}\nCloudinary Name Var: ${!!process.env.CLOUDINARY_CLOUD_NAME}\n\n`;
-        fs.appendFileSync(path.join(process.cwd(), "debug_upload.log"), debugLog);
-
         if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-            throw new Error(`Cloudinary configuration is missing. .env exists: ${envExists}. CWD: ${process.cwd()}. Keys visible: ${Object.keys(process.env).filter(k => k.startsWith('CLOUDINARY')).join(', ')}`);
+            throw new Error("Cloudinary configuration is missing. Please check your environment variables.");
         }
         
-        // Re-sync cloudinary config if we manually loaded
+        // Re-sync cloudinary config
         cloudinary.config({
             cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
             api_key: process.env.CLOUDINARY_API_KEY,
@@ -60,22 +33,10 @@ export async function uploadImageAction(formData: FormData) {
         const buffer = Buffer.from(bytes);
 
         const result = await uploadToCloudinary(buffer, "brightwood/gallery", file.type);
-        const successEntry = `[${new Date().toISOString()}] Gallery Upload Success\n\n`;
-        fs.appendFileSync(path.join(process.cwd(), "debug_upload.log"), successEntry);
+        
         return { success: true, ...result };
     } catch (error: any) {
-        const logEntry = `[${new Date().toISOString()}] Gallery Upload Error:\nMessage: ${error.message}\nStack: ${error.stack}\n${JSON.stringify(error, null, 2)}\n\n`;
-        try {
-            fs.appendFileSync(path.join(process.cwd(), "debug_upload.log"), logEntry);
-        } catch (logErr) {
-            console.error("Failed to write to debug log:", logErr);
-        }
-        
-        console.error("Gallery Upload Error Details:", {
-            message: error.message,
-            stack: error.stack,
-            error
-        });
+        console.error("Gallery Upload Error:", error);
         return { success: false, error: error.message || "Upload failed" };
     }
 }
